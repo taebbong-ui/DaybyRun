@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_2" data-name="레이어 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 118.45 74.16">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #51514f;
+        font-family: Pretendard-Medium-KSCpc-EUC-H, Pretendard;
+        font-size: 15px;
+        font-weight: 500;
+      }
+
+      .cls-2 {
+        fill: #fff;
+      }
+
+      .cls-3 {
+        fill: #6d6d6d;
+      }
+    </style>
+    <symbol id="_카메라" data-name="카메라" viewBox="0 0 333.71 257.91">
+      <g>
+        <g>
+          <rect class="cls-3" y="32.38" width="333.71" height="225.52" rx="28.19" ry="28.19"/>
+          <rect class="cls-3" x="28.95" y="16.67" width="53.71" height="29.43" rx="10.29" ry="10.29"/>
+          <path class="cls-3" d="M108.57,39.62c8.63-13.21,17.27-26.41,25.9-39.62h63.62l25.52,39.62h-115.05Z"/>
+        </g>
+        <path class="cls-2" d="M167.86,76.34c-38.29,0-69.33,31.04-69.33,69.33s31.04,69.33,69.33,69.33,69.33-31.04,69.33-69.33-31.04-69.33-69.33-69.33ZM167.86,192.33c-25.77,0-46.66-20.89-46.66-46.66s20.89-46.66,46.66-46.66,46.66,20.89,46.66,46.66-20.89,46.66-46.66,46.66Z"/>
+        <rect class="cls-2" x="253.68" y="63.71" width="50.67" height="20.24" rx="10.12" ry="10.12"/>
+      </g>
+    </symbol>
+  </defs>
+  <g id="music">
+    <g>
+      <text class="cls-1" transform="translate(0 69.66)"><tspan x="0" y="0">사진을 올려주세요 *</tspan></text>
+      <use width="333.71" height="257.91" transform="translate(36.33) scale(.14)" xlink:href="#_카메라"/>
+    </g>
+  </g>
+</svg>

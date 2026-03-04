@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_2" data-name="레이어 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23.57 42.8">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #705d3e;
+        font-family: TTHakgyoansimJeomsimsiganB, 'Hakgyoansim Jeomsimsigan';
+        font-size: 10px;
+      }
+
+      .cls-2 {
+        fill: none;
+        stroke-width: 1.5px;
+      }
+
+      .cls-2, .cls-3 {
+        stroke: #705d3e;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-3 {
+        fill: #fff;
+        stroke-width: 2px;
+      }
+    </style>
+  </defs>
+  <g id="main_main">
+    <g>
+      <circle class="cls-2" cx="9.76" cy="9.76" r="9.01"/>
+      <path class="cls-3" d="M22.85,22.7c-2.16-2.21-4.33-4.43-6.49-6.64"/>
+      <text class="cls-1" transform="translate(3.02 40.4)"><tspan x="0" y="0">검색</tspan></text>
+    </g>
+  </g>
+</svg>

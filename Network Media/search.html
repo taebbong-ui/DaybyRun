@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Page</title>
+
+    <style>
+        /* Pretendard Regular (weight 400) */
+@font-face {
+    font-family: "PretendardCustom";
+    src: url("./fonts/Pretendard-Regular.otf") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: "LunchTime";
+    src: url("./fonts/HakgyoansimJeomsimsiganB.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+      
+            background: #111;           /* 바깥 배경 (앱 밖 영역) */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 앱 프레임 (393 x 852 기준) */
+        .app {
+            width: 100%;
+            /* max-width: 393px;          */
+            aspect-ratio: 393 / 852;    /* 비율 유지 */
+            background: #e3e1d7;
+            overflow: hidden;
+            position: relative;  
+        }
+
+        .ref {
+            position: absolute;
+            inset: 0;              /* top:0; right:0; bottom:0; left:0; */
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .popular{
+            position: absolute;
+            top: 24.25%;
+            left: 22.15%;
+            width: 27.5%;
+            height: auto;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+        }
+        .near{
+            position: absolute;
+            bottom: 39.45%;
+            left: 29.7%;
+            width: 42.5%;
+            height: auto;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+        }
+        /*----bar style-----*/
+
+        .bar {
+            position: absolute;
+            left : 0;
+            bottom : 0;
+            width : 100%;
+            /* max-width: 393px;          */
+            aspect-ratio: 393 / 92.4286;    /* 비율 유지 */
+            overflow: hidden;
+            z-index: 10;
+            /* border : 1px solid red;  */
+        }
+        .belowBar {
+            width: 100%;
+            height: auto;     
+            display: block;
+        }
+        .main-btn {
+            position: absolute;
+            top: 45%;
+            left: 20.4%;
+            width: 6%;
+            height: auto;
+            transform: translate(-50%, -50%);
+        }
+        .category-btn {
+            position: absolute;
+            top: 48.8%;
+            left: 49.9%;
+            width: 8.7%;
+            height: auto;
+            transform: translate(-50%, -50%);
+        }
+        .mypage-btn {
+            position: absolute;
+            top: 47%;
+            left: 80.2%;
+            width: 10.8%;
+            height: auto;
+            transform: translate(-50%, -50%);
+        }
+
+    /*------------*/
+    /* === 검색창 전체 래퍼 === */
+.search-bar {
+    position: absolute;
+    top: 6%;                 /* 시안 상단 여백 맞춘 값 */
+    left: 50%;
+    transform: translateX(-50%);
+    
+    width: 87.5%;
+    height: 7%;
+    background: #ffffff;
+    
+    padding: 15px 22px;
+    border-radius: 40px;       /* 완전 둥근 형태 */
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+
+    display: flex;             /* 🔥 중앙정렬 핵심 */
+    justify-content: center;   /* 가로 중앙 */
+    align-items: center;       /* 🔥 세로 중앙 */
+    
+}
+
+/* input */
+.search-bar input {
+    border: none;
+    outline: none;
+    display: block;            /* 🔥 block 요소여야 margin auto가 적용됨 */
+    width: 90%;
+    font-family: "PretendardCustom";
+    font-weight: 400;
+    background: none;
+    font-size: 13px;
+    color: #000000;
+    white-space: nowrap;       /* 줄바꿈 방지 */
+    overflow-x: auto;          /* 가로 스크롤 가능 */
+    overflow-y: hidden;
+    
+    /* 스크롤바 숨기기 */
+    scrollbar-width: none;     /* Firefox */
+}
+.search-bar input::-webkit-scrollbar {
+    display: none;             /* Chrome / Safari */
+}
+.search-bar input::placeholder {
+    text-align: center;
+    color: #757574;
+}
+
+
+/* 정렬 탭 전체 박스 */
+.sort-tabs {
+  position: absolute;
+  top: 16.2%;                 /* 검색창 바로 아래쯤 – 필요하면 숫자 살짝 조절 */
+  left: 27%;
+  transform: translateX(-50%);
+  
+  display: flex;
+  align-items: center;
+  height: 23px;
+  padding: 0px;
+  border-radius: 999px;     /* 알약 모양 */
+
+  background: #ffffff;      /* 연한 베이지 바탕 */
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+  z-index: 10;
+}
+
+/* 각 탭 버튼 공통 */
+.sort-tab {
+  border: none;
+  background: transparent;
+  padding: 5.5px 20px;
+  border-radius: 999px;
+
+  font-family: "LunchTime";    /* 너가 쓰는 폰트 */
+  font-size: 13px;
+  font-weight: 400;
+  color: #705d3e;
+  cursor: pointer;
+
+  /* 기본 버튼 스타일 제거용 */
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* 포커스 테두리 제거 (탭 이동 시) */
+.sort-tab:focus {
+  outline: none;
+}
+
+/* 활성 탭(선택된 탭) */
+.sort-tab.active {
+  background: #f9dd8b;         /* 노란 pill */
+  color: #705d3e;
+}
+
+/* 검색 결과 리스트 컨테이너: main 의 .course-list 기준 */
+.search-result-list {
+    position: absolute;
+    top: 22%;          /* main 의 .popular-list 위치랑 맞춤 */
+    left: 5.5%;
+    width: 94.5%;
+    bottom: 10.8%;       /* 하단 바 위까지 공간 확보 (nearby-list 기준) */
+
+    display: flex;
+    flex-wrap: wrap;     /* 🔥 2열로 줄바꿈 */
+    gap: 20px 12px;      /* 세로 20 / 가로 12 */
+
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    padding-bottom: 30px;   /* 🔥 아래 여백 추가 */
+}
+.search-result-list::-webkit-scrollbar {
+    display: none;
+}
+.no-result-wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  /* 검색 리스트 영역 전체 사용 */
+  padding-bottom: 40px;
+}
+
+.no-result-img {
+  width: 45%;       /* 화면 절반 정도 */
+  height: auto;
+  opacity: 0.85;    /* 원하는 대로 조절 가능 */
+}
+
+/* ======================
+   🔥 카드 1개 (course-card)
+====================== */
+
+.course-card {
+    position: relative;
+    flex: 0 0 45.5%;          /* 화면 기준 카드 1장 폭 (필요하면 조절) */
+    height: 40.3%;
+    /* max-width: 260px; */
+    background: transparent; /* 카드 바깥 배경은 투명 */
+    padding-top: 4.1px;            /* 바깥 디버그 여백 느낌 */
+    box-sizing: border-box;
+}
+.card-map {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 166.8571 / 157.9683 ;   
+    background: #ffffff;       /* 기본 배경 */
+    border-radius: 20px;       /* 둥근 모서리 */
+    overflow: hidden;          /* 모서리 둥근 영역 밖 잘라내기 (필수) */
+}
+/* 지도 위 태그 전체 */
+.map-tags {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  display: flex;
+  gap: 8px;
+  z-index: 1000;
+}
+
+/* 각각의 태그 모양 */
+.map-tags .tag {
+  background: #ffffff;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-family: 'LunchTime';
+  font-size: 11px;
+  color: #555;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  white-space: nowrap;
+}
+
+/* 빈 카드(placeholder)에서는 태그 안 보이게 */
+.empty-card .map-tags {
+  display: none;
+}
+
+.card-title {
+    /* border: 1px solid red; */
+    position:absolute;
+    width: 90%;
+    height: 8%;
+    bottom: 11.8%;
+    left: 5%;
+    font-family: 'PretendardCustom';
+    font-weight: 400;
+    font-size: 13.5px;
+}
+
+.count-wrap {
+    position: absolute;
+    bottom: 2%;  /* 제목 아래로 위치 (조절 가능) */
+    left: 32.5%;
+    transform: translateX(-50%);
+    width: 50%;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    color: #757574;
+    font-size: 12px;
+    font-family: "PretendardCustom";
+    font-weight: 400;
+}
+
+.count {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.count-icon {
+    width: 14px;
+    height: auto;
+}
+/* 🔹 주변 코스가 없을 때 쓰는 빈 카드 */
+.empty-card .card-title,
+.empty-card .count-wrap {
+  display: none;           /* 제목/카운트 숨기기 */
+}
+
+.empty-card .card-map {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;     /* 이미 흰색이긴 한데 명시적으로 */
+  opacity: 0.5;
+}
+
+/* placeholder 이미지 사이즈 */
+.empty-card .card-map .no-course-img {
+  width: 55%;
+  height: auto;
+}
+
+    </style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- 검색창 -->
+  <div class="search-bar">
+    <input id="searchInput" type="text" placeholder="원하는 코스를 검색해보세요">
+  </div>
+  <div class="bar">
+            <img src="./element/main home/SVG/below bar.svg" alt="below bar svg" class="belowBar" />
+            <a href="main home.html" class="main-btn">
+                <img src="./element/main home/SVG/searchIcon.svg" alt="mainIcon svg">
+            </a>
+            <a href="category.html" class="category-btn">
+                <img src="./element/main home/SVG/categoryIcon.svg" alt="categoryIcon svg">
+            </a>
+            <a href="mypage.html" class="mypage-btn">
+                <img src="./element/main home/SVG/mypageIcon.svg" alt="mypageIcon svg">
+            </a>
+    </div>
+
+<!-- 🔥 정렬 탭 -->
+<div class="sort-tabs">
+  <button class="sort-tab active" data-sort="popular">인기순</button>
+  <button class="sort-tab" data-sort="latest">최신순</button>
+</div>
+
+  <!-- 검색 결과 리스트 -->
+  <div class="course-list search-result-list">
+    <!-- 🔸 이 한 장이 '템플릿 카드' (메인 홈 카드 그대로 복붙) -->
+     
+    <article class="course-card template">
+      <div class="card-map">
+        <div class="map-tags">
+          <span class="tag district-tag"></span>
+          <span class="tag distance-tag"></span>
+        </div>
+      </div>
+      <p class="card-title"></p>
+      <div class="count-wrap">
+        <div class="count like-count">
+          <img src="./element/course detail/SVG/popularity.svg" class="count-icon">
+          <span class="likeCount">0</span>
+        </div>
+
+        <div class="count save-count">
+          <img src="./element/course detail/SVG/popularity (2).svg" class="count-icon">
+          <span class="saveCount">0</span>
+        </div>
+      </div>
+    </article>
+  </div>
+
+</div>
+<script src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=4sobw8kl0w"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+<!-- 태그 매핑 -->
+<script src="./tagConfig.js"></script>
+
+<script>
+  // =========================
+  // 1) Firebase 초기화
+  // =========================
+  const firebaseConfig = {
+    apiKey: "AIzaSyAE8PH0DT_49EGAco6UozQ9WlnEZMxXy_M",
+    authDomain: "day-by-run.firebaseapp.com",
+    projectId: "day-by-run",
+  };
+
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  const db = firebase.firestore();
+
+  // =========================
+  // 2) 전역 상태
+  // =========================
+  const searchInput = document.getElementById("searchInput");
+  const initialKeyword = getSearchKeywordFromURL();
+  if (searchInput) {
+    searchInput.value = initialKeyword; // 메인에서 검색한 키워드 표시
+  }
+  const listEl      = document.querySelector(".search-result-list");
+  const sortTabs    = document.querySelectorAll(".sort-tab");   // ✅ 클래스명 수정
+  const templateCard = listEl.querySelector(".course-card.template");  // 🔥 추가
+
+  let allCourses = [];                  // 전체 코스
+  let currentSort = "popular";          // "popular" | "latest"
+
+  // =========================
+  // 3) 데이터 불러오기
+  // =========================
+  async function fetchAllCourses() {
+    const snapshot = await db.collection("runCourses").get();
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+  }
+
+
+  // =========================
+  // 4) 정렬 함수들
+  // =========================
+  function sortByPopularity(arr) {
+    const copy = arr.slice();
+    copy.sort((a, b) => {
+      const scoreA = (a.likeCount || 0) + (a.saveCount || 0);
+      const scoreB = (b.likeCount || 0) + (b.saveCount || 0);
+
+      if (scoreA !== scoreB) return scoreB - scoreA;
+      if ((a.likeCount || 0) !== (b.likeCount || 0))
+        return (b.likeCount || 0) - (a.likeCount || 0);
+      if ((a.saveCount || 0) !== (b.saveCount || 0))
+        return (b.saveCount || 0) - (a.saveCount || 0);
+
+      const tA = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : 0;
+      const tB = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : 0;
+      return tB - tA;
+    });
+    return copy;
+  }
+
+  function sortByLatest(arr) {
+    const copy = arr.slice();
+    copy.sort((a, b) => {
+      const tA = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : 0;
+      const tB = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : 0;
+      return tB - tA;
+    });
+    return copy;
+  }
+
+  function sortCourses(courses) {
+    if (currentSort === "popular") return sortByPopularity(courses);
+    return sortByLatest(courses);
+  }
+
+  // =========================
+  // 5) 검색용 텍스트 만들기
+  // =========================
+  // ===============================
+// 1) URL에서 keyword 가져오기
+// ===============================
+function getSearchKeywordFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const keyword = params.get("keyword") || "";
+  return keyword.trim();
+}
+
+// ===============================
+// 2) 코스 하나를 검색용 문자열로 만들기
+//    (제목 + 한글 지역태그 + 거리태그 등)
+// ===============================
+// 🔍 코스 하나를 "검색용 문자열"로 만들어 주는 함수
+function buildCourseSearchText(course) {
+  const parts = [];
+
+  // 1) 제목 (제목 검색이 안 되면 보통 여기 빠져 있음)
+  if (course.title) {
+    parts.push(course.title);
+  }
+
+  // 2) 설명도 검색에 포함하고 싶으면
+//   if (course.description) {
+//     parts.push(course.description);
+//   }
+
+  // 3) 지역 태그 (복수 선택 가능: ["MAPO", "YONGSAN"] 같은 코드 배열)
+  if (Array.isArray(course.district) && course.district.length > 0) {
+    // 사람이 보는 한글 라벨 "마포구 · 용산구"
+    parts.push(TagConfig.formatDistricts(course.district));
+
+    // 혹시 사용자가 코드로 검색할 수도 있으니 "MAPO YONGSAN"도 같이 넣어둠
+    parts.push(course.district.join(" "));
+  }
+
+  // 4) 거리
+  if (course.distance != null) {
+    // TagConfig 라벨: 2→"3km-", 5→"5km", 15→"10km+" 이런 거
+    parts.push(TagConfig.formatDistanceKm(course.distance));
+
+    // 숫자 + km 그대로도 추가: 사용자가 "5km"라고 검색하는 경우
+    parts.push(`${course.distance}km`);
+  }
+
+  // 5) 경사도 (FLAT / HILLY)
+  if (course.slope) {
+    if (Array.isArray(course.slope)) {
+      // 배열로 저장되어 있다면
+      course.slope.forEach(code => {
+        parts.push(TagConfig.formatSlope(code)); // "평지 위주"
+        parts.push(code);                         // "FLAT"
+      });
+    } else {
+      // 문자열 하나로 저장된 경우
+      parts.push(TagConfig.formatSlope(course.slope)); // "평지 위주"
+      parts.push(course.slope);                        // "FLAT"
+    }
+  }
+
+  // 6) 풍경/분위기 (NATURE / CITY / MIXED)
+  if (course.scenery) {
+    if (Array.isArray(course.scenery)) {
+      course.scenery.forEach(code => {
+        parts.push(TagConfig.formatScenery(code)); // "자연 속"
+        parts.push(code);                          // "NATURE"
+      });
+    } else {
+      parts.push(TagConfig.formatScenery(course.scenery)); // "자연 속"
+      parts.push(course.scenery);                          // "NATURE"
+    }
+  }
+
+  // 7) 이 외에 Firestore에 다른 태그 필드 있으면 여기서 더 추가 가능
+  // 예: course.tags, course.mood 등등
+  /*
+  if (Array.isArray(course.tags)) {
+    parts.push(course.tags.join(" "));
+  }
+  */
+
+  // 하나로 합치고 소문자로 (한글은 상관 없지만 통일)
+  return parts.join(" ").toLowerCase();
+}
+
+// ===============================
+// 3) 실제 필터 함수 (이름: filterCourses)
+// ===============================
+function filterCourses(allCourses, keyword) {
+  const kw = (keyword || "").toLowerCase();
+
+  // 검색어 없으면 전체 보여주고 싶으면 이대로,
+  // "검색어 없으면 아무것도 안 보이게" 하고 싶으면 return []로 바꿔도 돼
+  if (!kw) return allCourses;
+
+  return allCourses.filter(course => {
+    const text = buildCourseSearchText(course);
+    return text.includes(kw);
+  });
+}
+
+  // =========================
+  // 6) 카드에 지도 그리기
+  // =========================
+  function drawCourseMapInCard(cardEl, coordsRaw) {
+    if (!cardEl || !coordsRaw) return;
+    if (typeof naver === "undefined" || !naver.maps) {
+      console.warn("Naver Maps not ready yet");
+      return;
+    }
+
+    let coords = [];
+    if (Array.isArray(coordsRaw)) {
+      coords = coordsRaw;
+    } else if (coordsRaw.path && Array.isArray(coordsRaw.path)) {
+      coords = coordsRaw.path;
+    }
+    if (!coords.length) return;
+
+    const mapDiv = cardEl.querySelector(".card-map");
+    if (!mapDiv) return;
+
+    const path = coords
+      .map(c => {
+        const lat = c.lat ?? c.latitude;
+        const lng = c.lng ?? c.lon ?? c.longitude;
+        if (typeof lat !== "number" || typeof lng !== "number") return null;
+        return new naver.maps.LatLng(lat, lng);
+      })
+      .filter(Boolean);
+
+    if (!path.length) return;
+
+    const map = new naver.maps.Map(mapDiv, {
+      center: path[0],
+      zoom: 14,
+      draggable: false,
+      pinchZoom: false,
+      scrollWheel: false,
+      keyboardShortcuts: false,
+      disableDoubleTapZoom: true,
+      disableDoubleClickZoom: true,
+      disableTwoFingerTapZoom: true,
+    });
+
+    const bounds = new naver.maps.LatLngBounds();
+    path.forEach(p => bounds.extend(p));
+
+    let sumLat = 0, sumLng = 0;
+    path.forEach(ll => {
+      sumLat += ll.lat();
+      sumLng += ll.lng();
+    });
+    const centerLat = sumLat / path.length;
+    const centerLng = sumLng / path.length;
+    const scale = 0.9;
+    const inner = path.map(ll => {
+      const newLat = centerLat + (ll.lat() - centerLat) * scale;
+      const newLng = centerLng + (ll.lng() - centerLng) * scale;
+      return new naver.maps.LatLng(newLat, newLng);
+    });
+
+    new naver.maps.Polyline({
+      map,
+      path: inner,
+      strokeColor: "#5BBE3B",
+      strokeOpacity: 1,
+      strokeWeight: 5,
+    });
+
+    map.fitBounds(bounds);
+  }
+
+  // =========================
+  // 7) 카드 렌더링
+  // =========================
+function renderCourseList(courses) {
+  if (!templateCard) return;   // 템플릿 못 찾으면 종료
+
+  // 리스트 비우기
+  listEl.innerHTML = "";
+
+  // 1) 검색 결과 없음
+  if (!courses.length) {
+    const wrap = document.createElement("div");
+    wrap.classList.add("no-result-wrap");
+
+    const img = document.createElement("img");
+    img.src = "./element/search/SVG/message.svg";   // 🔥 네가 가진 이미지 경로 넣기
+    img.classList.add("no-result-img");
+
+    wrap.appendChild(img);
+    listEl.appendChild(wrap);
+    return;
+  }
+
+  courses.forEach(course => {
+    // ✅ 전역으로 빼놓은 templateCard를 복사
+    const card = templateCard.cloneNode(true);
+    card.classList.remove("template");
+
+    card.querySelector(".card-title").textContent = course.title || "";
+    card.querySelector(".likeCount").textContent  = course.likeCount ?? 0;
+    card.querySelector(".saveCount").textContent  = course.saveCount ?? 0;
+
+    const districtEl = card.querySelector(".district-tag");
+    const distanceEl = card.querySelector(".distance-tag");
+
+    if (districtEl) {
+      if (TagConfig?.formatDistricts) {
+        districtEl.textContent = TagConfig.formatDistricts(course.district || []);
+      } else {
+        districtEl.textContent = (course.district && course.district[0]) || "";
+      }
+    }
+
+    if (distanceEl) {
+      if (TagConfig?.formatDistanceKm) {
+        distanceEl.textContent = TagConfig.formatDistanceKm(course.distance);
+      } else {
+        distanceEl.textContent = course.distance != null ? `${course.distance}km` : "";
+      }
+    }
+
+    card.addEventListener("click", () => {
+      const kw = typeof getInputKeyword === "function"
+        ? getInputKeyword().trim()
+        : "";
+
+      const params = new URLSearchParams();
+      params.set("id", course.id);
+      params.set("from", "search");
+      if (kw) params.set("keyword", kw);
+
+      window.location.href = `detail.html?${params.toString()}`;
+    });
+
+    listEl.appendChild(card);
+
+    if (Array.isArray(course.coordinates) && course.coordinates.length) {
+      requestAnimationFrame(() => {
+        drawCourseMapInCard(card, course.coordinates);
+      });
+    }
+  });
+}
+
+    // =========================
+  // 8) 필터 + 정렬 + 렌더
+  // =========================
+
+  // 입력창 현재 값만 뽑는 헬퍼
+  function getInputKeyword() {
+    return searchInput ? searchInput.value.trim() : "";
+  }
+
+  // 실제로 필터 + 정렬 + 렌더까지 한 번에 하는 함수
+  function applyFilterAndRender(keywordFromEvent) {
+    if (!allCourses || !allCourses.length) return;  // 아직 데이터 없으면 패스
+
+    // 이벤트에서 키워드가 넘어오면 그걸 쓰고,
+    // 아니면 현재 입력창 값 사용
+    const keyword = (keywordFromEvent ?? getInputKeyword());
+
+    const filtered = filterCourses(allCourses, keyword);
+    const sorted   = sortCourses(filtered);
+    console.log(
+  currentSort,
+  sorted.map(c => ({
+    title: c.title,
+    createdAt: c.createdAt?.toDate
+      ? c.createdAt.toDate().toISOString()
+      : null,
+    like: c.likeCount || 0,
+    save: c.saveCount || 0,
+  }))
+);
+    renderCourseList(sorted);
+  }
+
+  // =========================
+  // 9) 이벤트 바인딩 & 초기 로드
+  // =========================
+
+  // 검색 입력
+  if (searchInput) {
+    // ① 타이핑 할 때마다 바로 필터
+    searchInput.addEventListener("input", () => {
+      applyFilterAndRender(getInputKeyword());
+    });
+
+    // ② Enter 누르면 URL keyword도 같이 갱신
+    searchInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+
+        const kw = getInputKeyword();
+
+        // URL query 업데이트 (페이지 새로고침 없이)
+        const params = new URLSearchParams(window.location.search);
+        if (kw) {
+          params.set("keyword", kw);
+        } else {
+          params.delete("keyword");
+        }
+        const newUrl = `${window.location.pathname}?${params.toString()}`;
+        window.history.replaceState(null, "", newUrl);
+
+        // 그리고 필터 돌리기
+        applyFilterAndRender(kw);
+      }
+    });
+  }
+
+  // 정렬 탭
+  sortTabs.forEach(btn => {
+    btn.addEventListener("click", () => {
+      sortTabs.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      currentSort = btn.dataset.sort;   // "popular" | "latest"
+      applyFilterAndRender();           // 현재 입력창 값 기준으로 다시 정렬
+    });
+  });
+
+  // 페이지 로드 시 데이터 가져오기
+  window.addEventListener("load", async () => {
+    try {
+      // Firestore에서 한 번만 가져오기
+      allCourses = await fetchAllCourses();
+
+      // 위쪽에서 이미 initialKeyword 로 input.value 세팅해놨으니까
+      // 그냥 현재 입력값 기준으로 한 번 그려주면 됨
+      applyFilterAndRender();
+    } catch (err) {
+      console.error(err);
+    }
+  });
+
+
+</script>
+
+</body>
+</html>

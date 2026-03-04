@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Detail</title>
+
+    <style>
+/* Pretendard Light (weight 300) */
+@font-face {
+    font-family: "PretendardCustom";
+    src: url("./fonts/Pretendard-Light.otf") format("opentype");
+    font-weight: 300;
+    font-style: normal;
+}
+
+/* Pretendard Regular (weight 400) */
+@font-face {
+    font-family: "PretendardCustom";
+    src: url("./fonts/Pretendard-Regular.otf") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+}
+/* lunchtime font */
+@font-face {
+    font-family: "LunchTime";
+    src: url("./fonts/HakgyoansimJeomsimsiganB.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #111;           /* 바깥 배경 (앱 밖 영역) */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 앱 프레임 (393 x 852 기준) */
+        .app {
+            width: 100%;
+            /* max-width: 393px;          */
+            aspect-ratio: 393 / 852;    /* 비율 유지 */
+            background: #e3e1d7;
+            overflow: hidden;
+            position: relative;  
+        }
+
+        .ref {
+            position: absolute;
+            inset: 0;              /* top:0; right:0; bottom:0; left:0; */
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 8.6%;
+            left: 16.2%;
+            width: 14%;
+            height: auto;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+        }
+
+        .like-txt {
+            position: absolute;
+            top: 10.7%;
+            right: 22.5%;
+            width: 3.6%;
+            height: auto;
+            transform: translate(-50%, -50%);
+        }
+        .save-txt {
+            position: absolute;
+            top: 10.7%;
+            right: 8.8%;
+            width: 5.5%;
+            height: auto;
+            transform: translate(-50%, -50%);
+        }
+        /* 헤더 아이콘 영역 전체 */
+        .header-icons {
+            display: flex;
+            align-items: center;
+            gap: 28px;                     /* 아이콘 간격 */
+            position: absolute;
+            right: 11.8%;                   /* 우측 정렬 */
+            top: 7%;                     /* 상단 정렬 */
+            z-index: 5;
+        }
+
+        /* 아이콘 공통 */
+        .header-icons .icon {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.15s ease;
+        }
+
+        .course-map {
+            position: absolute;
+            top: 13.1%;           /* 상단에서 어느 정도 내려오게 */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 86.5%;         /* 앱 폭의 80% */
+            aspect-ratio: 339.6351 / 321.542;    /* 정사각형 느낌 (맘에 안 들면 높이 %로 바꿔도 됨) */
+            height: auto;
+            border-radius: 40px;
+            overflow: hidden;   /* 둥근 모서리 밖은 잘라내기 */
+            background: #e5e5e5; /* 지도 로드 전 기본 배경색 */
+            z-index: 2;         /* ref 이미지 위, 다른 요소들(제목 등) 아래 정도 */
+        }
+
+        #title {
+            position: absolute;
+            top: 53.4%;                /* 너가 원하는 위치에 맞게 조정 가능 */
+            left: 10%;
+            font-family: "LunchTime";
+            font-size: 30px;
+            font-weight: normal;
+            color: #000000;
+            z-index: 5;
+            white-space: nowrap;
+        }
+        /* 🔥 형광펜 highlight */
+        #title::before {
+            content: "";
+            position: absolute;
+            left: -11px;         /* 텍스트보다 더 왼쪽으로 */
+            right: -21px;        /* 텍스트보다 더 오른쪽으로 */
+            top: 50%;           /* 텍스트 높이 기준 → 가운데 아래쪽에 배치 */
+            transform: translateY(-50%);
+            height: 55%;        /* 형광펜 두께 (텍스트보다 얇게) */
+            background: #f9dd8b;
+            z-index: -1;        /* 텍스트 뒤로 보내기 */
+        }
+        /* 설명 전체 그룹 */
+        .desc-wrap {
+            position: absolute;
+            top: 68.5%;                     /* 시안처럼 지도 아래에 배치 (조절 가능) */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%; 
+            height: 16.5%;
+            text-align: left;
+            padding: 18px 0;
+    
+            font-family: "PretendardCustom";
+            font-weight: 300;
+            font-size: 13px;
+            line-height: 1.35;
+            color: #000000;
+
+            border-top: 0.2px solid #705d3e;      /* 상단 라인 */
+            border-bottom: 0.2px solid #705d3e;   /* 하단 라인 */
+        }
+        .desc-wrap #courseGuide {
+            position: absolute;
+            width: 22%;
+            height: auto;
+            left: 50%;
+            top: 8%;
+            transform: translateX(-50%);
+        }
+
+        /* 실제 설명 텍스트(스크롤 되는 부분) */
+        .desc-wrap #description {
+            position: absolute;
+            top: 28%;
+            margin: 0;                /* 위·아래 margin 빼줘야 높이 계산 편함 */
+            padding-left: 3px;
+            height: 65%;             /* desc-wrap의 내용 영역을 꽉 채움 */
+            white-space: pre-line;
+
+            /* 🔥 글이 많으면 여기서만 세로 스크롤 */
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 4px;       /* 스크롤바랑 글자 사이 간격 조금 */
+        }
+        .desc-wrap #description::-webkit-scrollbar {
+            display: none;                /* Chrome, Safari, Edge Chromium */
+        }
+
+        .count-wrap {
+            position: absolute;
+            top: 57.7%;  /* 제목 아래로 위치 (조절 가능) */
+            left: 35%;
+            transform: translateX(-50%);
+            width: 50%;
+            display: flex;
+            gap: 22px;
+            align-items: center;
+            color: #757574;
+            font-size: 13px;
+            font-family: "PretendardCustom";
+            font-weight: 400;
+        }
+        .count {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .count-icon {
+            width: 14px;
+            height: auto;
+        }
+
+        /* 아이콘 + 태그 전체 그룹 */
+        .tag-group {
+            position: absolute;
+            top: 61.1%;                          /* 제목 아래 원하는 위치로 조절 */
+            left: 48%;
+            transform: translateX(-50%);
+
+            width: 78%;
+            display: flex;
+            flex-wrap: wrap;                   /* 🔥 길면 다음 줄로 자동 줄바꿈 */
+            column-gap: 15px;                  /* 아이템 사이 가로 간격 */
+            row-gap: 10px;                      /* 위아래 줄 간격 */
+
+            font-family: "LunchTime";
+            font-size: 14px;
+            color: #000000;
+        }
+
+        /* 아이콘 하나 + 텍스트 하나 묶음 */
+        .tag-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+
+            /* 아이콘+텍스트는 한 줄로 유지 (띄어쓰기 기준 줄바꿈 방지) */
+            white-space: nowrap;
+        }
+
+        /* 아이콘 크기 */
+        .tag-icon {
+            height: auto;
+        }
+        /* 아이콘별 개별 설정 */
+        .loc-icon {
+            margin-left: 5px;
+            width: 4.2%;
+        }
+        .dist-icon {
+            width: 20px;
+        }
+        .slope-icon {
+            width: 29px;
+        }
+        .nature-icon {
+            width: 15px;
+        }
+
+        /* 전체 영역(두 개 버튼 감싸는 div) */
+        .communicate {
+            position: absolute;
+            bottom: 5.1%;                 /* 원하는 만큼 위로/아래로 */
+            left: 56%;
+            transform: translateX(-50%);
+
+            width: 80%;                 /* 버튼이 퍼지는 폭 */
+            display: flex;
+            gap: 110px;
+            align-items: center;
+        }
+
+        /* 각 버튼 */
+        .communicate a {
+            display: flex;             /* 클릭 영역 확보 */
+        }
+
+        /* 공통 스타일 */
+        .communicate img {
+            height: auto;
+        }
+        .comment-btn img {
+            width: 83px;   
+        }
+        .music-btn img {
+            width: 95px;    
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- <img src="./element/course detail/network-media.png" alt="reference img" class="ref" /> -->
+
+        <img src="./element/course detail/SVG/beforebutton.svg" id="backBtn" class="back-btn">
+
+        <img src="./element/course detail/SVG/button (3).svg" id="likeTxt" class="like-txt">
+        <img src="./element/course detail/SVG/button (4).svg" id="saveTxt" class="save-txt">
+
+        <div class="header-icons">
+            <img id="likeBtn" class="icon" src="./element/course detail/SVG/button.svg">
+            <img id="saveBtn" class="icon" src="./element/course detail/SVG/button (2).svg">
+        </div>
+
+        <!-- 🔹 여기: 실제 지도가 들어갈 영역 -->
+        <div id="courseMap" class="course-map"></div>
+        <!-- 🔹 여기: 실제 제목이 들어갈 영역 -->
+        <h1 id="title"></h1>
+        <!-- 🔹 설명 구역 전체 -->
+        <div class="desc-wrap">
+            <p id="description"></p>
+            <img id="courseGuide" src="./element/course detail/SVG/courseguide (2).svg">
+        </div>
+        <!-- 🔹 여기: 실제 아이콘이 들어갈 영역 -->
+        <div class="count-wrap">
+            <div class="count like-count">
+                <img src="./element/course detail/SVG/popularity.svg" class="count-icon">
+                <span id="likeCount">0</span>
+            </div>
+
+            <div class="count save-count">
+                <img src="./element/course detail/SVG/popularity (2).svg" class="count-icon">
+                <span id="saveCount">0</span>
+            </div>
+        </div>
+        <!-- 🔹 여기: 실제 태그들이 들어갈 영역 -->
+        <!-- 🔹 여기: 실제 태그들이 들어갈 영역 -->
+        <div id="tag" class="tag-group">
+            <div class="tag-item">
+                <img src="./element/course detail/SVG/location.svg" class="loc-icon" alt="위치">
+                <span id="tagLocation"></span>
+            </div>
+
+            <div class="tag-item">
+                <img src="./element/course detail/SVG/distance.svg" class="dist-icon" alt="거리">
+                <span id="tagDistance"></span>
+            </div>
+
+            <div class="tag-item">
+                <img src="./element/course detail/SVG/slope.svg" class="slope-icon" alt="경사">
+                <span id="tagSlope"></span>
+            </div>
+
+            <div class="tag-item">
+                <img src="./element/course detail/SVG/nature.svg" class="nature-icon" alt="자연">
+                <span id="tagNature"></span>
+            </div>
+        </div>
+
+<div class="communicate">
+    <a href="#" class="comment-btn">
+        <img src="./element/course detail/SVG/comment.svg" alt="comment">
+    </a>
+    <a href="#" class="music-btn">
+        <img src="./element/course detail/SVG/music.svg" alt="music">
+    </a>
+</div>
+
+    </div>
+    
+    <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=4sobw8kl0w"></script>
+    <!-- Firebase v8 SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <script src="./tagConfig.js"></script>
+    <!-- 상세 페이지 로직 -->
+    <script src="./detail.js"></script>
+</body>
+</html>

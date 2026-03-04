@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comment Page</title>
+    <style>
+/* Pretendard Regular (weight 400) */
+@font-face {
+    font-family: "PretendardCustom";
+    src: url("./fonts/Pretendard-Regular.otf") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+}
+/* lunchtime font */
+@font-face {
+    font-family: "LunchTime";
+    src: url("./fonts/HakgyoansimJeomsimsiganB.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #ffffff;           /* 바깥 배경 (앱 밖 영역) */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 앱 프레임 (393 x 852 기준) */
+        .app {
+            width: 100%;
+            max-width: 393px;         
+            aspect-ratio: 393 / 852;    /* 비율 유지 */
+            background: #ffffff;
+            overflow: hidden;
+            position: relative;  
+        }
+
+        .ref {
+            position: absolute;
+            inset: 0;              /* top:0; right:0; bottom:0; left:0; */
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .comment_page {
+            position: absolute;
+            top: 8.4%;
+            left: 50%;
+            width: 39.7%;
+            height: auto;
+            transform: translate(-50%, -50%);
+        }
+        .comment {
+            position: absolute;
+            top: 8%;
+            left: 85.5%;
+            width: 25%;
+            height: auto;
+            transform: translate(-50%, -50%);
+            
+        }
+        .close-btn {
+            position: absolute;
+            top: 6.5%;      /* 필요하면 숫자 조금씩 조절 */
+            left: 12%;
+
+            background: none;
+            border: none;
+            padding: 0;
+
+            font-size: 24px;      /* X 크기 */
+            font-weight: 200;     /* 얇은 X 원하면 200~300, 진하게는 600 */
+            color: #000;          /* 색 */
+
+            cursor: pointer;
+        }
+
+
+/* ----- 모달 전체 배경 (오버레이) ----- */
+.comment-modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+
+  background: rgba(0, 0, 0, 0.4);
+  display: none; 
+  justify-content: center;
+  align-items: center;
+
+  z-index: 999;
+}
+
+/* 모달 보여줄 때 */
+.comment-modal.show {
+  display: flex;
+}
+
+/* ----- 모달 카드 ----- */
+.comment-modal-inner {
+  width: 82%;
+  height: 75%;
+  max-width: 360px;
+  background: #e8e7e2;
+  border-radius: 26px;
+  padding: 30px 20px;
+  position: relative;
+}
+
+/* ----- 닫기 버튼 ----- */
+.comment-close {
+  position: absolute;
+  left: 7%;
+  top: 2.5%;
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: #51514f;
+  cursor: pointer;
+}
+
+/* ----- 폼 영역 ----- */
+.comment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ----- 개별 필드 ----- */
+.comment-field {
+  position: relative;
+  border: none;
+  padding: 0;
+  align-items: center;
+  background: none;
+  display: flex;
+}
+
+/* 실제 input 숨기기 */
+.comment-field input[type="file"] {
+  display: none;
+}
+
+/* ----- 이미지 업로드 영역 ----- */
+.photo-field {
+  position: absolute;
+  left: 50%;
+  top: 6%;
+  width: 70%;
+  aspect-ratio: 1;
+  transform: translate(-50%);
+  background: #fff;
+  border-radius: 25px;
+  overflow: hidden;
+  justify-content: center;
+}
+.photo-icon {
+  width: 55%;
+  height: auto;
+}
+/* 업로드된 이미지 미리보기 */
+.photo-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+}
+.title-field {
+  position: absolute;
+  width: 85%;
+  left: 50%;
+  top: 44.5%;
+  transform: translate(-50%); 
+}
+.content-field {
+  top: 56.3%;
+  position: absolute;
+  width: 85%;
+  left: 50%;
+  transform: translate(-50%); 
+}
+
+.title-field img,
+.singer-field img {
+  width: 100%;
+  height: auto;
+}
+
+/* ----- 텍스트 입력 ----- */
+.title-field input{
+  font-family: "PretendardCustom";
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%); 
+  width: 86%;
+  border: none;
+  padding: 8px 0px;
+  background: transparent;
+  font-size: 13px;
+  outline: none;
+}
+/* textarea는 content-field 안을 가득 채우기 */
+.content-field textarea {
+  font-family: "PretendardCustom";
+  position: absolute;
+  top: 15%;           /* 테두리 안쪽 여백 – 숫자 조금씩 조절해서 맞추면 됨 */
+  left: 50%;
+  transform: translate(-50%); 
+  width: 95%;        /* 양쪽 여백 고려한 폭 */
+  height: 83%;       /* 위·아래 여백 고려한 높이 */
+  border: none;  /* 디버깅용, 나중에 지워도 됨 */
+  padding: 10px 12px;
+  font-size: 13px;
+  background: transparent;
+  outline: none;
+
+  resize: none;          /* 크기 조절 금지 */
+  overflow-y: auto;      /* 세로 스크롤 */
+  overflow-x: hidden;    /* 가로 스크롤 안 쓰고 자동 줄바꿈 */
+
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* 스크롤바 숨기기 */
+.content-field textarea::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari */
+}
+.content-field textarea {
+  -ms-overflow-style: none;  /* IE, Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+/* ----- 업로드 버튼 ----- */
+.upload-field {
+  position: absolute;
+  width: 35%;
+  left: 50%;
+  bottom: 5%;
+  transform: translate(-50%); 
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* ===== 코멘트 리스트 전체 박스 ===== */
+.comment-list {
+  position: absolute;
+  top: 16%;            /* Comment 타이틀 아래쯤 – 필요하면 조절 */
+  left: 51.5%;
+  transform: translateX(-50%);
+  width: 95%;
+  height: 78%;         /* 스크롤 가능한 영역 높이 */
+  /* ✅ 배경/그림자 없음 */
+  background: transparent;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+/* 스크롤 영역 */
+.comment-list-scroll {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 6px 4px 5px;
+  scrollbar-width: none;     /* Firefox */
+  -ms-overflow-style: none;  /* IE, Edge */
+  scroll-behavior: smooth;
+  background: transparent;
+  box-shadow: none;
+
+  /* 🔥 위아래만 살짝 페이드되는 마스크 */
+  /* -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0px,
+    black 20px,
+    black calc(100% - 20px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0px,
+    black 20px,
+    black calc(100% - 20px),
+    transparent 100%
+  ); */
+}
+.comment-list-scroll::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari */
+}
+:root {
+  --comment-column-gap: 15px; /* ← 두 열 사이 원하는 간격 (지금 22px보다 넓게) */
+}
+/* ===== 코멘트 그리드 (2열 Masonry) ===== */
+#commentGrid {
+  font-size: 0;                 /* inline-block 공백 제거 */
+  padding: 14px 10px 26px;
+}
+
+/* 왼/오 2개의 컬럼 */
+.comment-column {
+  display: inline-block;
+  vertical-align: top;
+  width: calc((100% - var(--comment-column-gap)) / 2);     /* 2열 + 가운데 22px 간격 */
+  font-size: 0;                 /* 안쪽 공백 제거 */
+}
+
+/* 오른쪽 컬럼만 왼쪽 마진 */
+.comment-column + .comment-column {
+  margin-left: var(--comment-column-gap); 
+}
+
+/* 카드 하나는 컬럼 안에서 100% 너비로 */
+.comment-card {
+  display: block;
+  width: 93%;
+  margin: 0 0 26px;
+
+  break-inside: avoid;
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 8px 8px 10px;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+
+  height: auto;
+  min-height: unset !important;
+
+  /* 기울기 + 스크롤 스케일용 변수 */
+  --tilt: 0deg;
+  --scroll-scale: 0.92;   /* 기본 크기(멀리 있을 때) */
+
+  opacity: 1;
+  transform-origin: center center;
+  transform: scale(var(--scroll-scale)) rotate(var(--tilt));
+
+  transition:
+    transform 0.12s ease-out,
+    box-shadow 0.3s ease-out,
+    opacity 0.15s ease-out;
+}
+/* 스티커 */
+.comment-card::before {
+  background-color: var(--sticker-color);
+  content: "";
+  position: absolute;
+  top: -6.5%;               /* 카드 위쪽에 절반 걸치게 */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  opacity: 0.55;            /* 불투명도 ↓ 스티커 느낌 */
+  backdrop-filter: blur(1px);
+  z-index: 3;
+  pointer-events: none;     /* 클릭 방해 X */
+}
+
+/* 필요하면 가운데 카드 더 튀게 보이도록 hover도 유지 */
+.comment-card:hover,
+.comment-card:active {
+  box-shadow:
+    0 16px 30px rgba(0, 0, 0, 0.26),
+    0 0 0 1px rgba(255, 255, 255, 0.7);
+  transform: translateY(-4px) scale(1.02) rotate(var(--tilt, -2deg));
+}
+/* ⬇️ 이 한 줄 추가 */
+.comment-column .comment-card:last-child {
+  margin-bottom: 0;   /* 제일 아래 카드만 여백 제거 */
+}
+
+/* 사진 */
+.comment-photo-wrap {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.comment-photo {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  border-radius: 16px;
+  filter: saturate(1.05);
+  transform: scale(1.03);
+  transition: transform 0.35s ease-out;
+}
+
+.comment-card:hover .comment-photo {
+  transform: scale(1.06);
+}
+
+/* 날짜  */
+.comment-meta {
+  font-family: "LunchTime";
+  margin-top: 7px;
+  font-size: 13px !important;
+  color: #51514f;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  opacity: 0.9;
+}
+.comment-date {
+  font-size: 9px;
+}
+
+/* 배경 (시트 뒤 어두워지는 부분) */
+.comment-detail-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.15);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease-out;
+}
+
+/* 열렸을 때 */
+.comment-detail-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* 아래에서 올라오는 시트 */
+.comment-detail-sheet {
+  width: 100%;
+  max-height: 85%;
+  background: #fff;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-radius: 80px 80px 0 0;
+  box-shadow: 0 -8px 20px rgba(0,0,0,0.15);
+  transform: translateY(100%);
+  transition: transform 0.28s cubic-bezier(0.19, 0.8, 0.3, 1.0);
+}
+
+/* 열렸을 때 시트 위치 */
+.comment-detail-backdrop.open .comment-detail-sheet {
+  transform: translateY(0);
+}
+/* 사진 영역 + 발자국 */
+.detail-photo-area {
+  position: relative;
+  padding: 40px 26px 8px;
+}
+
+.detail-photo-wrap {
+  width: 100%;
+  display: flex;           /* 🔥 추가 */
+  justify-content: center; /* 🔥 추가: 가로 중앙 */
+}
+
+.detail-photo-wrap img {
+  width: 85%;
+  border-radius: 0px;
+  display: block;
+}
+
+/* 왼발 */
+.detail-foot-left {
+  position: absolute;
+  left: 6%;
+  top: 25%;
+  width: 11%;
+  opacity: 0.9;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* 오른발 */
+.detail-foot-right {
+  position: absolute;
+  right: 8%;
+  bottom: 0%;
+  width: 11%;
+  opacity: 0.9;
+  pointer-events: none;
+  z-index: 10;
+}
+/* 텍스트 영역 전체 패딩 */
+.detail-body {
+  padding: 18px 26px 26px;
+}
+
+/* 제목 전체 영역 */
+.detail-title-area {
+  padding: 0 26px 10px;
+  text-align: center;
+  overflow: hidden;          /* 🔥 제목이 밖으로 튀어나와도 가리기 */
+}
+
+/* 🔥 제목이 들어가는 가로 박스
+   - 이 폭을 "max 가로"로 사용
+*/
+.detail-title-box {
+  position: relative;
+  display: inline-block;    /* 🔥 내용만큼 width */
+  width: auto;              /* 🔥 더 이상 100% 고정 아님 */
+  max-width: 95%;          /* 카드 폭보다 조금 좁게 (필요하면 숫자만 조절) */
+  margin: 0 auto;            /* 중앙 정렬 */
+  overflow: hidden;          /* 넘치는 건 잘라내기 */
+  text-align: left;          /* 텍스트는 왼쪽부터 시작 */
+}
+
+/* 제목 자체 */
+.detail-title {
+  font-family: "LunchTime";
+  font-size: 25px !important;
+  margin: 20px 0 6px 0;      /* 아래 여백 = 물결 자리 */
+  line-height: 1.4;
+  display: inline-block;
+  white-space: nowrap;       /* 🔥 한 줄로 */
+  transform: translateX(0);  /* 기본 위치 */
+}
+/* 길 때만 JS가 붙여줄 클래스 */
+.detail-title.marquee {
+  /* duration은 JS에서 --marquee-duration으로 넣어줄 거야 */
+  animation: title-marquee var(--marquee-duration, 8s)
+             ease-in-out forwards;
+}
+
+/* 🔥 한 번 왼쪽으로 쭉 → 다시 처음으로 돌아와서 멈추기 */
+@keyframes title-marquee {
+  0%   { transform: translateX(0); }
+  10%  { transform: translateX(0); }   /* 시작에서 잠깐 정지 */
+  60%  { transform: translateX(calc(-1 * var(--title-overflow, 0px))); }
+  90%  { transform: translateX(calc(-1 * var(--title-overflow, 0px))); }
+  100% { transform: translateX(0); }   /* 다시 처음 위치로 복귀해서 멈춤 */
+}
+/* 물결 장식: 제목 바로 아래 */
+.detail-title-deco {
+  position: absolute;
+  left: 50%;
+  bottom: 0%;               /* 숫자 줄이면 더 붙고, 키우면 더 내려감 */
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 100%;
+  pointer-events: none;
+}
+
+/* 날짜 */
+.detail-date {
+  font-family: "PretendardCustom";
+  margin-top: 5px;
+  font-size: 13px;
+  color: #999;
+  text-align: right;
+}
+/* 내용 전체 박스: SVG랑 크기 완전 일치 + 가운데 정렬 */
+.detail-content-area {
+  position: relative;
+  width: 90%;
+  margin: 0 auto 26px;   /* 가로 중앙 정렬 */
+}
+
+/* SVG 프레임이 이 div의 크기를 결정하게 */
+.detail-content-frame {
+  display: block;        /* 인라인 말고 블록 */
+  width: 100%;
+  height: auto;          /* 비율은 SVG 원본 그대로 */
+  pointer-events: none;
+}
+
+/* 텍스트 영역: SVG 안쪽에서만 세로 스크롤 */
+.detail-content {
+  position: absolute;
+  z-index: 1;
+
+  /* SVG 안쪽 여백 값 (맘에 안 들면 조절 가능) */
+  top: 18px;
+  left: 20px;
+  right: 20px;
+  bottom: 18px;
+
+  font-size: 13px;
+  line-height: 1.6;
+  color: #444;
+
+  overflow-y: auto;   /* 텍스트만 세로 스크롤 */
+  overflow-x: hidden;
+}
+
+/* 텍스트 스크롤바 숨기기 */
+.detail-content::-webkit-scrollbar {
+  display: none;
+}
+.detail-content {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* 텍스트 스크롤바 숨기기 */
+.detail-content::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari */
+}
+.detail-content {
+  -ms-overflow-style: none;  /* IE, Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+    </style>
+</head>
+<body>
+    <!-- <img src="./element/comment/network-media.png" alt="reference img" class="ref" /> -->
+    <img src="./element/comment/SVG/comment.svg" alt="comment_page" class="comment_page" />
+    
+    <img src="./element/comment/SVG/my_comment_1.svg" alt="comment" class="comment" />
+    <button id="closeBtn" class="close-btn">X</button>
+    <!-- 코멘트 리스트 영역 -->
+    <div class="comment-list">
+      <div class="comment-list-scroll">
+        <div id="commentGrid" class="comment-grid"></div>
+      </div>
+    </div>
+
+    <!-- 모달 -->
+<div class="comment-modal" id="commentModal">
+  <div class="comment-modal-inner">
+    <button class="comment-close">&times;</button>
+
+    <div class="comment-form">
+
+      <!-- 1. 사진 업로드 SVG + file input -->
+      <label class="comment-field photo-field">
+        <img src="./element/comment/SVG/photo.svg" alt="사진 업로드" class="photo-icon"/>
+        <img class="photo-preview" id="photoPreview" />
+        <input type="file" id="commentPhoto" accept="image/*" />
+      </label>
+
+      <!-- 2. 제목 SVG + text input -->
+      <label class="comment-field title-field">
+        <img src="./element/comment/SVG/title.svg" alt="제목" />
+        <input type="text" id="commentTitle" placeholder="" />
+      </label>
+
+      <!-- 3. 내용 SVG + text input -->
+      <label class="comment-field content-field">
+        <img src="./element/comment/SVG/content.svg" alt="내용" />
+        <textarea type="text" id="commentContent" placeholder=""> </textarea>
+      </label>
+
+      <!-- 4. 업로드 버튼 SVG + 실제 버튼 -->
+      <button class="comment-field upload-field" id="uploadCommentBtn">
+        <img src="./element/comment/SVG/upload_button.svg" alt="의견 업로드" />
+      </button>
+
+    </div>
+  </div>
+</div>
+</div>
+<div class="comment-detail-backdrop" id="commentDetailBackdrop">
+  <div class="comment-detail-sheet" id="commentDetailSheet">
+    <div class="detail-handle"></div>
+
+    <!-- 사진 + 발자국 데코 -->
+<div class="detail-photo-area">
+  <div class="detail-photo-wrap">
+    <img id="detailPhoto" src="" alt="photo" />
+  </div>
+
+  <!-- 왼발 -->
+  <img
+    class="detail-foot-left"
+    src="./element/comment/SVG/left_foot.svg"
+    alt="left"
+  />
+
+  <!-- 오른발 -->
+  <img
+    class="detail-foot-right"
+    src="./element/comment/SVG/right_foot.svg"
+    alt="right"
+  />
+</div>
+
+<!-- 제목 + 물결 밑줄 -->
+<div class="detail-title-area">
+  <!-- 🔥 제목이 들어갈 고정 가로 박스 -->
+  <div class="detail-title-box">
+    <h2 id="detailTitle" class="detail-title"></h2>
+    <img
+      class="detail-title-deco"
+      src="./element/comment/SVG/title_design.svg"
+      alt=""
+    />
+  </div>
+
+  <div class="detail-date" id="detailDate"></div>
+</div>
+
+    <!-- 내용 박스 + 프레임 데코 -->
+    <div class="detail-content-area">
+      <img
+        class="detail-content-frame"
+        src="./element/comment/SVG/content_design.svg"
+        alt=""
+      />
+      <p id="detailContent" class="detail-content"></p>
+    </div>
+  </div>
+</div>
+
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+
+<script>
+    const firebaseConfig = {
+    apiKey: "AIzaSyAE8PH0DT_49EGAco6UozQ9WlnEZMxXy_M",
+    authDomain: "day-by-run.firebaseapp.com",
+    projectId: "day-by-run",
+    storageBucket: "day-by-run.firebasestorage.app",
+  };
+  const STICKER_COLORS = [
+  "#EAAEAC", // Baby Rose
+  "#655552", // Chestnut
+  "#FADD8B", // Lemon Tart
+  "#839573", // Olive
+  "#A4BDE0"  // Bright Sky
+];
+
+
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  const db = firebase.firestore();
+  const storage = firebase.storage();
+document.addEventListener("DOMContentLoaded", () => {
+  // ===== 요소들 가져오기 =====
+  const commentIcon   = document.querySelector(".comment");       // 상단 말풍선 아이콘
+  const modal         = document.getElementById("commentModal");
+  const modalCloseBtn = document.querySelector(".comment-close");
+
+  const photoInput    = document.getElementById("commentPhoto");
+  const photoPreview  = document.getElementById("photoPreview");
+  const photoIcon     = document.querySelector(".photo-icon");
+
+  const titleInput    = document.getElementById("commentTitle");
+  const contentInput  = document.getElementById("commentContent");
+  const uploadBtn     = document.getElementById("uploadCommentBtn");
+
+  // URL에서 courseId 가져오기 (comment.html?id=코스ID)
+  const params   = new URLSearchParams(location.search);
+  const courseId = params.get("id");
+  console.log("comment.html courseId:", courseId);
+
+  // ===== 모달 열기/닫기 =====
+  if (commentIcon && modal) {
+    commentIcon.addEventListener("click", () => {
+      modal.classList.add("show");
+    });
+  }
+
+  if (modalCloseBtn) {
+    modalCloseBtn.addEventListener("click", () => {
+      modal.classList.remove("show");
+    });
+  }
+
+  // 배경 클릭 시 닫기
+  if (modal) {
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) modal.classList.remove("show");
+    });
+  }
+
+  // ===== 사진 선택 시 미리보기 =====
+  if (photoInput) {
+    photoInput.addEventListener("change", () => {
+      const file = photoInput.files[0];
+      if (!file) return;
+
+      const url = URL.createObjectURL(file);
+      photoPreview.src = url;
+      photoPreview.style.display = "block";
+      if (photoIcon) photoIcon.style.display = "none";
+    });
+  }
+
+  // ===== 업로드 버튼 → Storage + Firestore =====
+  if (uploadBtn) {
+    uploadBtn.addEventListener("click", async () => {
+      const file   = photoInput.files[0];
+      const title  = titleInput.value.trim();
+      const content = contentInput.value.trim();
+
+      if (!courseId) {
+        alert("코스 정보가 없습니다. 다시 코스를 선택해 주세요.");
+        return;
+      }
+      if (!file) {
+        alert("사진을 업로드해 주세요.");
+        return;
+      }
+      if (!title || !content) {
+        alert("제목과 내용을 모두 입력해 주세요.");
+        return;
+      }
+
+      try {
+        uploadBtn.disabled = true;
+
+        // 1) Storage에 이미지 업로드
+        const path    = `courseComments/${courseId}/${Date.now()}_${file.name}`;
+        const fileRef = storage.ref().child(path);
+
+        await fileRef.put(file);
+        const imageUrl = await fileRef.getDownloadURL();
+
+        // 2) Firestore에 코멘트 문서 추가
+        await db
+          .collection("runCourses")
+          .doc(courseId)
+          .collection("comments")
+          .add({
+            title:     title,
+            content:   content,
+            imageUrl:  imageUrl,
+            courseId:  courseId,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          });
+
+        // ===== 업로드 후 초기화 =====
+        photoInput.value = "";
+        titleInput.value = "";
+        contentInput.value = "";
+
+        if (photoPreview) {
+          photoPreview.src = "";
+          photoPreview.style.display = "none";
+        }
+        if (photoIcon) {
+          photoIcon.style.display = "block"; // 아이콘 다시 보이게
+        }
+
+        // 모달 닫기
+        modal.classList.remove("show");
+
+      } catch (err) {
+        console.error("코멘트 업로드 실패:", err);
+        alert("업로드 중 오류가 발생했습니다: " + err.message);
+      } finally {
+        uploadBtn.disabled = false;
+      }
+    });
+  }
+  loadComments();
+});
+
+// ----- 사진 업로드 미리보기 -----
+const photoInput = document.getElementById("commentPhoto");
+const photoPreview = document.getElementById("photoPreview");
+
+photoInput.addEventListener("change", () => {
+  const file = photoInput.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      photoPreview.src = reader.result;
+      photoPreview.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  }
+});
+// ===== 코멘트 불러오기 =====
+async function loadComments() {
+  const params   = new URLSearchParams(location.search);
+  const courseId = params.get("id");
+  console.log("loadComments courseId:", courseId);
+
+  const gridEl = document.getElementById("commentGrid");
+  if (!gridEl) return;
+
+  gridEl.innerHTML = "";
+
+  if (!courseId) {
+    const msg = document.createElement("div");
+    msg.textContent = "코스 정보를 찾을 수 없습니다.";
+    msg.style.fontSize = "12px";
+    msg.style.color = "#777";
+    msg.style.textAlign = "center";
+    gridEl.appendChild(msg);
+    return;
+  }
+
+  try {
+    const snap = await db
+      .collection("runCourses")
+      .doc(courseId)
+      .collection("comments")
+      .orderBy("createdAt", "desc")   // 🔥 최신순
+      .get();
+
+    if (snap.empty) {
+      const msg = document.createElement("div");
+      msg.textContent = "아직 등록된 코멘트가 없습니다.";
+      msg.style.fontSize = "13px";
+      msg.style.color = "#777";
+      msg.style.textAlign = "center";
+      gridEl.appendChild(msg);
+      return;
+    }
+
+    // 1) 카드 전부 만들기 (순서 유지)
+    const cards = [];
+    snap.forEach((doc) => {
+      const data = doc.data();
+      const card = createCommentCard(data);
+      // 🔹 클릭하면 상세 시트 열기
+      card.addEventListener("click", () => {
+        openCommentDetail({
+          title: data.title,
+          content: data.content,
+          imageUrl: data.imageUrl,
+          dateText: formatCommentDate(data)  // 아래에서 함수 만들 거야
+        });
+      });
+      cards.push(card);
+    });
+
+    // 2) 왼/오 컬럼 2개 만들기
+    const colLeft  = document.createElement("div");
+    const colRight = document.createElement("div");
+    colLeft.className  = "comment-column";
+    colRight.className = "comment-column";
+
+    gridEl.appendChild(colLeft);
+    gridEl.appendChild(colRight);
+
+    // 3) Masonry 배치: 항상 더 낮은 컬럼에 카드 추가
+    cards.forEach((card) => {
+      const hLeft  = colLeft.offsetHeight;
+      const hRight = colRight.offsetHeight;
+      const color = STICKER_COLORS[Math.floor(Math.random() * STICKER_COLORS.length)];
+      card.style.setProperty("--sticker-color", color);
+
+      if (hLeft <= hRight) {
+        colLeft.appendChild(card);
+      } else {
+        colRight.appendChild(card);
+      }
+    });
+
+    // 4) 기존 효과들 계속 쓰고 싶으면 유지
+    applyRandomTilts();
+    setupScrollScale();
+    setupScrollAnimation();
+
+  } catch (err) {
+    console.error("코멘트 불러오기 실패:", err);
+  }
+}
+
+// Firestore 문서 → 카드 DOM 만들기
+function createCommentCard(data) {
+  const card = document.createElement("article");
+  card.className = "comment-card";
+
+  const photoWrap = document.createElement("div");
+  photoWrap.className = "comment-photo-wrap";
+
+  const img = document.createElement("img");
+  img.className = "comment-photo";
+  img.src = data.imageUrl || "";
+  img.alt = "코멘트 사진";
+
+  photoWrap.appendChild(img);
+  card.appendChild(photoWrap);
+
+  // ✅ 날짜만 표시 (YYYY.MM.DD)
+  const meta = document.createElement("div");
+  meta.className = "comment-meta";
+
+  const date = document.createElement("span");
+  date.className = "comment-date";
+
+  if (data.createdAt && data.createdAt.toDate) {
+    const d = data.createdAt.toDate();
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    date.textContent = `${yyyy}.${mm}.${dd}`;
+  } else {
+    date.textContent = "";
+  }
+
+  meta.appendChild(date);
+  card.appendChild(meta);
+
+  return card;
+}
+
+
+// ===== 스크롤 애니메이션 (IntersectionObserver) =====
+function setupScrollAnimation() {
+  const cards = document.querySelectorAll(".comment-card");
+  const scrollRoot = document.querySelector(".comment-list-scroll");
+  if (!scrollRoot || !cards.length) return;
+
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          io.unobserve(entry.target); // 한 번만 애니메이션
+        }
+      });
+    },
+    {
+      root: scrollRoot,      // ✅ 스크롤되는 div 기준
+      threshold: 0.25,
+      rootMargin: "0px 0px -5% 0px", // 살짝 더 일찍/부드럽게
+    }
+  );
+
+  cards.forEach((card) => io.observe(card));
+}
+function setupScrollScale() {
+  const scrollRoot = document.querySelector(".comment-list-scroll");
+  const cards = document.querySelectorAll(".comment-card");
+  if (!scrollRoot || !cards.length) return;
+
+  function updateScale() {
+    const rootRect = scrollRoot.getBoundingClientRect();
+    const centerY = rootRect.top + rootRect.height / 2;
+
+    cards.forEach((card) => {
+      const rect = card.getBoundingClientRect();
+      const cardCenter = rect.top + rect.height / 2;
+
+      const dist = Math.abs(cardCenter - centerY);
+
+      // 중심에서 멀어질수록 0 ~ 1 사이 값
+      const maxDist = rootRect.height / 2 + rect.height;
+      let t = dist / maxDist;
+      if (t > 1) t = 1;
+
+      // t=0 (가운데) → 1.05 / t=1 (멀리) → 0.9
+      const scale = 1.05 - 0.15 * t;
+      const opacity = 1 - 0.3 * t;   // 멀면 살짝 투명하게
+
+      card.style.setProperty("--scroll-scale", scale.toFixed(3));
+      card.style.opacity = opacity.toFixed(3);
+    });
+  }
+
+  // 초기 상태 & 스크롤마다 업데이트
+  updateScale();
+  scrollRoot.addEventListener("scroll", updateScale);
+  window.addEventListener("resize", updateScale);
+}
+
+function applyRandomTilts() {
+  const cards = document.querySelectorAll(".comment-card");
+
+  cards.forEach(card => {
+    // -5 ~ +5도 사이 랜덤 각도
+    let angle = (Math.random() * 10) - 5;
+
+    // 너무 0에 가까우면 살짝 더 기울여주기 (0.5도 이하는 피함)
+    if (Math.abs(angle) < 0.5) {
+      angle += angle < 0 ? -0.8 : 0.8;
+    }
+
+    card.style.setProperty("--tilt", angle.toFixed(2) + "deg");
+  });
+}
+
+function formatCommentDate(data) {
+  // runDate 필드가 string "2025.12.23" 형식이면 그대로 쓰고
+  if (data.runDate) return data.runDate;
+
+  // createdAt 이 Timestamp면 간단히 포맷해서 사용
+  if (data.createdAt && data.createdAt.toDate) {
+    const d = data.createdAt.toDate();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}.${m}.${day}`;
+  }
+  return "";
+}
+
+function openCommentDetail(detail) {
+  const backdrop  = document.getElementById("commentDetailBackdrop");
+  const photo     = document.getElementById("detailPhoto");
+  const titleEl   = document.getElementById("detailTitle");
+  const dateEl    = document.getElementById("detailDate");
+  const contentEl = document.getElementById("detailContent");
+  const titleBox  = document.querySelector(".detail-title-box");
+
+  if (!backdrop) return;
+
+  // 1) 내용 채우기
+  photo.src            = detail.imageUrl  || "";
+  titleEl.textContent  = detail.title     || "";
+  dateEl.textContent   = detail.dateText  || "";
+  contentEl.textContent= detail.content   || "";
+
+  // 2) 제목 길이에 따라 애니메이션 결정
+  if (titleBox && titleEl) {
+    // 이전 상태 초기화
+    titleEl.classList.remove("marquee");
+    titleEl.style.removeProperty("--title-overflow");
+    titleEl.style.removeProperty("--marquee-duration");
+
+    // DOM 그려진 다음 실제 폭을 재야 해서 requestAnimationFrame 사용
+    requestAnimationFrame(() => {
+      const boxWidth  = titleBox.clientWidth;
+      const textWidth = titleEl.scrollWidth;
+      const overflow  = textWidth - boxWidth;
+
+      if (overflow > 0) {
+        // 얼마나 넘치는지(px) → 이만큼 왼쪽으로 이동
+        titleEl.style.setProperty("--title-overflow", overflow + "px");
+
+        // 🔥 길이에 따라 속도 자동 조절
+        const baseSec  = 3;          // 최소 시간
+        const speedPx  = 25;         // px당 0.016~0.02초 느낌
+        const duration = Math.max(baseSec, overflow / speedPx);
+
+        titleEl.style.setProperty(
+          "--marquee-duration",
+          duration.toFixed(2) + "s"
+        );
+
+        // 실제 애니메이션 시작
+        titleEl.classList.add("marquee");
+      }
+    });
+  }
+
+  // 3) 시트 열기
+  backdrop.classList.add("open");
+}
+
+function closeCommentDetail() {
+  const backdrop = document.getElementById("commentDetailBackdrop");
+  if (!backdrop) return;
+  backdrop.classList.remove("open");
+}
+
+// 배경을 클릭하면 닫히게
+document.addEventListener("DOMContentLoaded", () => {
+  const backdrop = document.getElementById("commentDetailBackdrop");
+  if (!backdrop) return;
+
+  backdrop.addEventListener("click", (e) => {
+    // 시트 바깥(배경) 눌렀을 때만 닫기
+    if (e.target === backdrop) {
+      closeCommentDetail();
+    }
+  });
+});
+const params   = new URLSearchParams(window.location.search);
+const courseId = params.get("id");
+const from     = params.get("from") || "";
+
+document.getElementById("closeBtn").addEventListener("click", () => {
+  const params   = new URLSearchParams(window.location.search);
+  const courseId = params.get("id");
+  const from     = params.get("from") || "";
+  const keyword  = params.get("keyword") || "";
+
+  if (!courseId) {
+    window.location.href = "main home.html";
+    return;
+  }
+
+  const qs = new URLSearchParams();
+  qs.set("id", courseId);
+  if (from)    qs.set("from", from);
+  if (keyword) qs.set("keyword", keyword);
+
+  window.location.href = `detail.html?${qs.toString()}`;
+});
+
+
+</script>
+
+    
+</body>
+</html>

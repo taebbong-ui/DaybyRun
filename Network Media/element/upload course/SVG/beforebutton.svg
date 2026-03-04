@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_2" data-name="레이어 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54.45 19.08">
+  <defs>
+    <style>
+      .cls-1 {
+        stroke: #705d3e;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 2px;
+      }
+
+      .cls-1, .cls-2 {
+        fill: #705d3e;
+      }
+
+      .cls-2 {
+        font-family: TTHakgyoansimJeomsimsiganB, 'Hakgyoansim Jeomsimsigan';
+        font-size: 16.26px;
+      }
+    </style>
+  </defs>
+  <g id="course_upload" data-name="course upload">
+    <g id="beforebutton">
+      <path class="cls-1" d="M13.19,1C9.13,3.97,5.06,6.93,1,9.9c4.06,2.73,8.13,5.46,12.19,8.19V1Z"/>
+      <text class="cls-2" transform="translate(27.78 14.72)"><tspan x="0" y="0">이전</tspan></text>
+    </g>
+  </g>
+</svg>

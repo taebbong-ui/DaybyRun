@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Page</title>
+    <style>
+        /* Pretendard Regular (weight 400) */
+@font-face {
+    font-family: "PretendardCustom";
+    src: url("./fonts/Pretendard-Regular.otf") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: "LunchTime";
+    src: url("./fonts/HakgyoansimJeomsimsiganB.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+      
+            background: #111;           /* 바깥 배경 (앱 밖 영역) */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 앱 프레임 (393 x 852 기준) */
+        .app {
+            width: 100%;
+            /* max-width: 393px;          */
+            aspect-ratio: 393 / 852;    /* 비율 유지 */
+            background: #ffffff;
+            overflow: hidden;
+            position: relative;  
+        }
+
+        .ref {
+            position: absolute;
+            inset: 0;              /* top:0; right:0; bottom:0; left:0; */
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        /*----bar style-----*/
+
+        .bar {
+            position: absolute;
+            left : 0;
+            bottom : 0;
+            width : 100%;
+            /* max-width: 393px;          */
+            aspect-ratio: 393 / 92.4286;    /* 비율 유지 */
+            overflow: hidden;
+            /* border : 1px solid red;  */
+        }
+        .belowBar {
+            width: 100%;
+            height: auto;     
+            display: block;
+        }
+        .main-btn {
+            position: absolute;
+            top: 47.37%;
+            left: 20.4%;
+            width: 6%;
+            height: auto;
+            transform: translate(-50%, -50%);
+        }
+        .category-btn {
+            position: absolute;
+            top: 48.8%;
+            left: 49.9%;
+            width: 8.7%;
+            height: auto;
+            transform: translate(-50%, -50%);
+        }
+        .mypage-btn {
+            position: absolute;
+            top: 44.7%;
+            left: 80.2%;
+            width: 10.8%;
+            height: auto;
+            transform: translate(-50%, -50%);
+        }
+
+        /* ================= 프로필 영역 ================= */
+
+    .mypage-container {
+      position: absolute;
+      inset: 0;
+      padding: 32px 20px 110px; /* 아래 바 공간만큼 패딩 */
+      overflow-y: auto;
+    }
+
+    /* 상단 커버 + 프로필 이미지 */
+    .profile-header {
+      position: relative;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .cover-photo {
+      width: 100%;
+      aspect-ratio: 339 / 204;
+      border-radius: 24px;
+      object-fit: cover;
+      display: block;
+      margin-top: 10px;
+    }
+
+    .profile-photo-wrap {
+      position: absolute;
+      left: 50%;
+      bottom: -48px;
+      transform: translateX(-50%);
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      border: 4px solid #ffffff;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+      background: #f5f5f5;
+    }
+
+    .profile-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* 닉네임 + 이메일 */
+    .profile-info {
+      margin-top: 64px; /* 프로필 동그라미 겹치는 영역만큼 여백 */
+      text-align: center;
+    }
+
+    .profile-name {
+      font-family: "LunchTime";
+      font-size: 28px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 6px;
+    }
+
+    .profile-email {
+      font-family: "PretendardCustom";
+      font-size: 15px;
+      color: #705d3e; /* 살짝 붉은 브라운 */
+    }
+
+    /* ================= 카드 공통 스타일 ================= */
+
+    .card-list {
+      margin-top: 9.2%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;   /* ⭐ 카드들도 중앙으로 */
+    }
+
+    .card {
+      position: relative;
+      width: 90%;
+      /* ✨ 그림자 추가 */
+      filter: drop-shadow(0px 0px 10px rgba(0,0,0,0.15));
+      /* 클릭 애니메이션용 */
+      transition: transform 0.12s ease-out, filter 0.12s ease-out;
+    }
+    .card.interactive:active {
+        transform: scale(1.02);
+        filter: drop-shadow(0px 6px 16px rgba(0,0,0,0.16));
+    }
+    
+    .card.upload-course {
+        display: block;
+        text-decoration: none;
+        color: inherit;   /* 안에서 텍스트 색 유지 */
+    }
+
+    .card-bg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #4a4138;
+      margin-bottom: 4px;
+    }
+
+    .card-subtitle {
+      font-size: 11px;
+      color: #9c8b7d;
+    }
+
+    /* ================= 가운데 노란 카드(다이어리) ================= */
+
+    .diary-top-text {
+      font-size: 15px;
+      font-weight: 600;
+      color: #4a4138;
+      margin-bottom: 8px;
+    }
+
+    .diary-tabs {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+    }
+
+    .diary-tab {
+      flex: 1;
+      text-align: center;
+      padding: 6px 0;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.0); /* 기본은 투명 */
+      color: #7a624c;
+      font-weight: 500;
+      pointer-events: auto;
+      text-decoration: none;
+    }
+
+    .diary-tab.active {
+      background: #fff8e1;
+      color: #5a4633;
+    }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- ====== 프로필 내용 ====== -->
+    <div class="mypage-container">
+      <!-- 상단 커버 + 프로필 -->
+      <section class="profile-header">
+        <!-- 배경 사진 -->
+        <img
+          src="./element/mypage/background.jfif"  
+          alt="profile cover"
+          class="cover-photo"
+        />
+
+        <!-- 프로필 이미지 -->
+        <div class="profile-photo-wrap">
+          <img
+            src="./element/mypage/photo.jfif" 
+            alt="profile"
+            class="profile-photo"
+          />
+        </div>
+      </section>
+
+      <!-- 이름 / 이메일 -->
+      <section class="profile-info">
+        <h1 class="profile-name">김태희</h1>
+        <p class="profile-email">thkim4459@gmail.com</p>
+      </section>
+
+      <!-- 카드 3개 -->
+      <section class="card-list">
+
+        <!-- 1. 저장한 코스 카드 -->
+        <div class="card saved-course interactive">
+          <!-- div1.svg 사용 -->
+          <img src="./element/mypage/SVG/div1.svg" alt="saved course card" class="card-bg" />
+        </div>
+
+        <!-- 2. 나의 다이어리 카드 -->
+        <div class="card diary interactive">
+          <!-- div2.svg 사용 -->
+          <img src="./element/mypage/SVG/div2.svg" alt="diary card" class="card-bg" />
+        </div>
+
+        <!-- 3. 코스 업로드하기 카드 -->
+        <a id="uploadCard" href="upload.html" class="card upload-course interactive">
+            <img src="./element/mypage/SVG/div3.svg" alt="upload course card" class="card-bg" />
+        </a>
+
+      </section>
+    </div>
+
+    <!-- ====== 하단 네비게이션 바 ====== -->
+        <div class="bar">
+            <img src="./element/main home/SVG/below bar.svg" alt="below bar svg" class="belowBar" />
+            <a href="main home.html" class="main-btn">
+                <img src="./element/mypage/SVG/searchIcon.svg" alt="mainIcon svg">
+            </a>
+            <a href="category.html" class="category-btn">
+                <img src="./element/main home/SVG/categoryIcon.svg" alt="categoryIcon svg">
+            </a>
+            <img src="/element/mypage/SVG/mypageIcon.svg" alt="mypageIcon svg" class="mypage-btn" />
+        </div>
+    </div>
+
+    <script>
+  const uploadCard = document.getElementById("uploadCard");
+
+  uploadCard.addEventListener("click", function (e) {
+    e.preventDefault();  // 즉시 이동 막기
+
+    // 애니메이션 클래스 추가
+    uploadCard.classList.add("clicked");
+
+    // 150~200ms 뒤 페이지 이동
+    setTimeout(() => {
+      window.location.href = uploadCard.getAttribute("href");
+    }, 180); // 0.18초 뒤 이동 (딜레이 조절 가능)
+  });
+</script>
+
+    
+</body>
+</html>

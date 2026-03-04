@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_2" data-name="레이어 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 98 98">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        mix-blend-mode: multiply;
+        opacity: .9;
+      }
+
+      .cls-3 {
+        fill: #f9dd8b;
+      }
+
+      .cls-4 {
+        fill: #705d3e;
+      }
+    </style>
+    <symbol id="_새_심볼_1" data-name="새 심볼 1" viewBox="0 0 98 98">
+      <g id="_새_심볼" data-name="새 심볼">
+        <image class="cls-2" width="98" height="98" xlink:href="data:image/png;base64,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"/>
+        <g>
+          <ellipse class="cls-4" cx="49.02" cy="64.88" rx="8.47" ry="2.27"/>
+          <path class="cls-3" d="M67.41,42.69c-.36-5.06-5.18-7.93-7.42-9.26-4.68-2.78-9.33-2.69-11.28-2.54,0,.02,0,.05,0,.07-2.2-.1-6.42.06-10.66,2.58-2.24,1.33-7.06,4.19-7.42,9.26-.38,5.41,4.63,9.06,5.3,9.54,4.09,2.89,8.54,2.35,9.61,2.19,1.16,3.7,2.32,7.4,3.48,11.11,0-.04,0-.08,0-.13,1.16-3.7,2.32-7.39,3.47-11.09,1.07.16,5.52.7,9.61-2.19.67-.47,5.68-4.13,5.3-9.54Z"/>
+          <circle class="cls-1" cx="49.02" cy="44.2" r="2.3"/>
+          <circle class="cls-1" cx="40.11" cy="44.2" r="2.3"/>
+          <circle class="cls-1" cx="57.93" cy="44.22" r="2.3"/>
+        </g>
+      </g>
+    </symbol>
+  </defs>
+  <g id="comment">
+    <use width="98" height="98" xlink:href="#_새_심볼_1"/>
+  </g>
+</svg>

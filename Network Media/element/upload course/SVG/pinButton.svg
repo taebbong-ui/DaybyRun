@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_2" data-name="레이어 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210.41 85.28">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+        stroke: #705d3e;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-2 {
+        fill: #705d3e;
+        font-family: TTHakgyoansimJeomsimsiganB, 'Hakgyoansim Jeomsimsigan';
+        font-size: 20px;
+        letter-spacing: -.03em;
+      }
+    </style>
+  </defs>
+  <g id="course_upload" data-name="course upload">
+    <g>
+      <rect class="cls-1" x=".5" y=".5" width="209.41" height="84.28" rx="10.24" ry="10.24"/>
+      <text class="cls-2" transform="translate(43.3 47.68)"><tspan x="0" y="0">핀으로 코스 표시</tspan></text>
+    </g>
+  </g>
+</svg>

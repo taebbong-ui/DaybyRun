@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_2" data-name="레이어 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34.5 39.28">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #705d3e;
+        stroke-linecap: round;
+        stroke-miterlimit: 10;
+        stroke-width: 1.5px;
+      }
+
+      .cls-2 {
+        fill: #705d3e;
+        font-family: TTHakgyoansimJeomsimsiganB, 'Hakgyoansim Jeomsimsigan';
+        font-size: 10px;
+      }
+    </style>
+  </defs>
+  <g id="profile">
+    <g id="belowbar_사본" data-name="belowbar 사본">
+      <line class="cls-1" x1="6.69" y1="16.75" x2="27.45" y2="16.75"/>
+      <line class="cls-1" x1="6.69" y1="8.75" x2="27.45" y2="8.75"/>
+      <line class="cls-1" x1="6.69" y1=".75" x2="27.45" y2=".75"/>
+      <text class="cls-2" transform="translate(0 36.88)"><tspan x="0" y="0">카테고리</tspan></text>
+    </g>
+  </g>
+</svg>

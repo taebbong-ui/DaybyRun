@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_2" data-name="레이어 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 339.64 321.54">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #a5a5a5;
+      }
+
+      .cls-1, .cls-2 {
+        opacity: .5;
+      }
+
+      .cls-3 {
+        fill: none;
+      }
+
+      .cls-4 {
+        fill: #f6eed7;
+      }
+
+      .cls-5 {
+        clip-path: url(#clippath);
+      }
+    </style>
+    <clipPath id="clippath">
+      <path id="_사각형_" data-name="&amp;lt;사각형&amp;gt;" class="cls-3" d="M299.31,321.54H40.32c-22.27,0-40.32-18.05-40.32-40.32,0-14.8,0-29.6,0-44.4,0-65.5,0-131,0-196.5,0-2.69.27-16.97,11.81-28.51C19.11,4.51,29.19,0,40.32,0h258.99C321.58,0,339.64,18.05,339.64,40.32v240.9c0,22.27-18.05,40.32-40.32,40.32Z"/>
+    </clipPath>
+  </defs>
+  <g id="course_upload" data-name="course upload">
+    <g id="map_back">
+      <g class="cls-2">
+        <g class="cls-5">
+          <g>
+            <image width="2048" height="2048" transform="translate(-5.25 -23.58) scale(.17)" xlink:href="../../../../../Downloads/Gemini_Generated_Image_jpjc32jpjc32jpjc.png"/>
+            <ellipse class="cls-4" cx="218.1" cy="47.63" rx="5.25" ry="5.42"/>
+          </g>
+        </g>
+      </g>
+      <path id="_사각형_-2" data-name="&amp;lt;사각형&amp;gt;" class="cls-1" d="M299.31,321.54H40.32c-22.27,0-40.32-18.05-40.32-40.32,0-14.8,0-29.6,0-44.4,0-65.5,0-131,0-196.5,0-2.69.27-16.97,11.81-28.51C19.11,4.51,29.19,0,40.32,0h258.99c22.27,0,40.32,18.05,40.32,40.32v240.9c0,22.27-18.05,40.32-40.32,40.32Z"/>
+    </g>
+  </g>
+</svg>

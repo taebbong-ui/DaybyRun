@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Course</title>
+
+    <style>
+        /* Pretendard Regular (weight 400) */
+@font-face {
+    font-family: "PretendardCustom";
+    src: url("./fonts/Pretendard-Regular.otf") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #111;           /* 바깥 배경 (앱 밖 영역) */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 앱 프레임 (393 x 852 기준) */
+        .app {
+            width: 100%;
+            /* max-width: 393px;          */
+            aspect-ratio: 393 / 1137.86;    /* 비율 유지 */
+            background: #e3e1d7;
+            overflow: hidden;
+            position: relative;  
+        }
+
+        .ref {
+            position: absolute;
+            inset: 0;              /* top:0; right:0; bottom:0; left:0; */
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        /* ---------------------------------------- */
+        .map {
+            position: relative;
+            transform: translate(-50%);
+            left: 50%;
+            top: 9.8%;
+            width: 89%;
+            margin: 0;           
+            max-width: 339.6351px;
+            aspect-ratio: 339.6351  / 321.542;    
+            border-radius: 42px;
+            overflow: hidden;
+            /* border: 1px solid red; */
+        }
+
+        /* 네이버 지도 캔버스 */
+        #naverMap {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+        }
+
+        /* 공통 버튼 영역 */
+        .btn-area {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            justify-content: center;     /* 세로 중앙 */
+            align-items: center;         /* 가로 중앙 */
+            gap: 20px;
+            z-index: 2;
+            /* border: 1px solid red; */
+        }
+        .route-btn {
+            width: 62%;
+            max-width: 340px;         
+            aspect-ratio: 241.5953 / 84.2796;    /* 비율 유지 */
+            /* 버튼 기본 스타일 제거 (여기가 중요) */
+            padding: 0;
+            border: none;
+            background: transparent;
+            display: block;
+            filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.15));
+            /* border: 1px solid red; */
+        }
+        .trace-btn {
+            width: 71%;
+            max-width: 280px;         
+            aspect-ratio: 209.4077 / 84.2796;    /* 비율 유지 */
+            /* 버튼 기본 스타일 제거 (여기가 중요) */
+            padding: 0;
+            border: none;
+            background: transparent;
+            display: block;
+            filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.15));
+            /* border: 1px solid red; */
+        }
+        .route-btn img {
+            width: 100%;
+            height: 100%; 
+        }
+        .trace-btn img {
+            width: 100%;
+            height: 100%; 
+        }
+        /*------------------*/
+        .name {
+            position: absolute;
+            top: 43.15%;
+            left: 50%;
+            width: 80%;
+            height: auto;
+            transform: translate(-50%, -50%);
+        }
+        .unique {
+            position: absolute;
+            top: 56%;
+            left: 18.3%;
+            width: 22%;
+            height: auto;
+            transform: translate(-50%, -50%);
+        }
+        /* ===== 코스 특징 태그 영역 ===== */
+
+/* 공통: 네 줄 모두 같은 기본 스타일 */
+.app > div.tag-row {
+    position: absolute;
+    left: 59%;
+    transform: translateX(-50%);
+    width: 80%;                 /* 태그들이 들어갈 폭 (아이콘 오른쪽 여백 생각해서) */
+
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;           /* 🔥 넘치면 가로 스크롤 */
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;  /* 모바일 스크롤 부드럽게 */
+    pointer-events: none;     /* 🔥 여기 */
+    /* 배경이랑 어울리게 */
+    background: transparent;
+}
+.tag-row .tag-btn {
+    pointer-events: auto;     /* 🔥 버튼은 클릭 가능 */
+}
+/* Chrome, Safari, Edge */
+.tag-row::-webkit-scrollbar {
+    display: none;
+}
+/* Firefox */
+.tag-row {
+    scrollbar-width: none;
+}
+/* IE, old Edge */
+.tag-row {
+    -ms-overflow-style: none;
+}
+
+/* 1줄차: 지역 (위에서 첫 번째 줄 위치) */
+.app > div:nth-of-type(2).tag-row {
+    top: 49.8%;                   /* 코스 특징 타이틀 바로 아래쯤 */
+}
+/* 2줄차: 거리 */
+.app > div:nth-of-type(3).tag-row {
+    top: 53.9%;
+}
+/* 3줄차: 경사 */
+.app > div:nth-of-type(4).tag-row {
+    top: 58.1%;
+}
+/* 4줄차: 분위기 */
+.app > div:nth-of-type(5).tag-row {
+    top: 62.2%;
+}
+
+/* 태그 버튼 모양 (네 줄 공통) */
+.tag-btn {
+    flex: 0 0 auto;             /* 줄어들지 말고 내용만큼만 */
+    padding: 9px 14px;
+    border-radius: 999px;
+    border: 1px solid #51514f;
+    background: #e3e1d7;
+    font-family: "PretendardCustom";
+    font-size: 13px;
+    color: #51514f;
+    cursor: pointer;
+    white-space: nowrap;        /* 버튼 안에서 줄바꿈 금지 */
+}
+
+/* 클릭해서 선택됐을 때 */
+.tag-btn.selected {
+    border-color: #7f8f6a;
+    background: #f4f7ee;
+    color: #4f5d3b;
+    font-weight: 500;
+}
+        .descript {
+            position: absolute;
+            top: 78.35%;
+            left: 50%;
+            width: 80%;
+            height: auto;
+            transform: translate(-50%, -50%);
+        }
+
+        .before-btn {
+            position: absolute;
+            top: 6.6%;
+            left: 16.1%;
+            width: 14%;
+            height: auto;
+            transform: translate(-50%, -50%);
+        }
+        /* 코스 업로드 버튼 위치/배치 */
+        .upload-btn {
+            position: absolute;
+            left: 50%;
+            bottom: 4.4%;        /* 버튼을 조금 위로/아래로 옮기고 싶으면 이 값만 조절 */
+            transform: translateX(-50%);
+            width: 39%;          /* 시안처럼 양옆 여백 남게 */
+            padding: 0;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.15));
+        }
+
+        /* SVG를 버튼 안에서 꽉 채우기 */
+        .upload-btn img {
+            width: 100%;
+            height: auto;
+            display: block;      /* 위아래 여백 제거 */
+            pointer-events: none;
+        }
+
+/* 공통 래퍼: SVG + 입력창 */
+.field-wrap {
+  position: relative;
+  width: 80%;       /* 시안 너비에 맞게 */
+  margin: 0 auto 100px;
+}
+
+/* SVG 배경 */
+.field-wrap .field-bg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 공통 입력 스타일 */
+.field-wrap input,
+.field-wrap textarea {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 88%;           /* 안쪽 둥근 사각형보다 살짝 작게 */
+  border: none;
+  outline: none;
+  background: transparent;
+
+  font-family: "PretendardCustom", sans-serif;
+  font-size: 13px;
+  color: #444;
+}
+
+/* placeholder 색 */
+.field-wrap input::placeholder,
+.field-wrap textarea::placeholder {
+  color: #b8b3a9;
+}
+
+/* 이름 입력창은 높이가 낮으니 line-height로 세로정렬 */
+.field-name input {
+  height: 60%;          /* SVG 안 칸 높이 비율에 맞게 조절 */
+  line-height: 1.4;
+}
+
+/* 설명 textarea는 좀 더 크게 */
+.field-desc textarea {
+  height: 70%;          /* SVG 안 칸에 맞게 조절 */
+  resize: none;         /* 사용자가 크기 조절 못 하게 */
+  line-height: 1.4;
+  padding-top: 4px;     /* 위 여백 살짝 */
+}
+
+/* === 코스 이름 === */
+.name-wrap {
+  position: relative;
+  top: 12.1%;
+  width: 80%;
+  margin: 0 auto 22px;
+}
+.name-bg {
+  width: 100%;
+  display: block;
+}
+.name-input {
+  position: absolute;
+  top: 69%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 88%;
+  height: 50%;
+  border: none;
+  outline: none;
+  background: transparent;
+
+  font-family: "PretendardCustom";
+  font-size: 13px;
+  color: #000000;
+}
+.name-input::placeholder {
+  color: #878787;
+}
+
+/* === 코스 설명 === */
+.desc-wrap-upload {
+  position: relative;
+  top: 36%;
+  width: 80%;
+  margin: 18px auto 0;
+}
+.desc-bg {
+  width: 100%;
+  display: block;
+}
+.desc-input {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 88%;
+  height: 70%;
+  resize: none;
+  border: none;
+  outline: none;
+  background: transparent;
+
+  font-family: "PretendardCustom";
+  font-size: 13px;
+  color: #000000;
+  line-height: 1.3;
+  padding: 0;
+  overflow-y: scroll;     /* 내부 스크롤은 되게 함 */
+  scrollbar-width: none;   /* Firefox */
+}
+/* Chrome, Edge, Safari */
+.desc-input::-webkit-scrollbar {
+  display: none;           /* 🔥 스크롤바 안 보이게 */
+}
+.desc-input::placeholder {
+  color: #878787;
+}
+
+
+/* 🔥 모달 전체 배경 */
+.upload-success {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+/* 기본적으로 숨김 */
+.hidden {
+  display: none;
+}
+/* 🔥 모달 박스 */
+.upload-success-box {
+  background: #ffffff;
+  padding: 2rem 2.5rem;
+  border-radius: 18px;
+  text-align: center;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+  font-family: 'PretendardCustom';
+}
+/* 글자 */
+.upload-success-text {
+  font-size: 1.1rem;
+  color: #000000;
+  margin-bottom: 1.6rem;
+}
+/* 홈 버튼 */
+.go-home-btn {
+  background: #7b8f74;
+  color: white;
+  border: none;
+  padding: 0.7rem 2rem;
+  border-radius: 999px;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+/* 🔥 모든 스크롤바 숨기기 (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+    display: none;
+}
+
+/* 🔥 Firefox */
+* {
+    scrollbar-width: none;
+}
+
+/* 🔥 IE & old Edge */
+* {
+    -ms-overflow-style: none;
+}
+
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- <img src="./element/upload course/network-media.png" alt="reference img" class="ref" />
+         -->
+        
+        <div class="map" id="naverMapWrapper">
+            <!-- <img src="./element/upload course/SVG/map_back.svg" alt="map back img" class="map-back" /> -->
+            <!-- 처음에는 배경 이미지 + 버튼만 보이게 -->
+            <img src="./element/upload course/SVG/map_back.svg"
+                alt="map back img"
+                class="map-back" />
+
+            <div class="btn-area">
+                <button class="route-btn" id="pinBtn">
+                    <img src="./element/upload course/SVG/pinButton.svg" alt="pin-btn">
+                </button>
+
+                <button class="trace-btn" id="traceBtn">
+                    <img src="./element/upload course/SVG/traceButton.svg" alt="trace-btn">
+                </button>
+            </div>
+        </div>      
+        
+        <img src="./element/upload course/SVG/course_unigue.svg" alt="course unique img" class="unique" />
+        <!-- 지역: 여러 개 선택 가능 -->
+         
+        <div class="tag-row">
+            <!-- 서울 25개 자치구 -->
+            <button class="tag-btn tag-district" data-code="GANGNAM">강남구</button>
+            <button class="tag-btn tag-district" data-code="GANGDONG">강동구</button>
+            <button class="tag-btn tag-district" data-code="GANGBUK">강북구</button>
+            <button class="tag-btn tag-district" data-code="GANGSEO">강서구</button>
+            <button class="tag-btn tag-district" data-code="GWANAK">관악구</button>
+            <button class="tag-btn tag-district" data-code="GWANGJIN">광진구</button>
+            <button class="tag-btn tag-district" data-code="GURO">구로구</button>
+            <button class="tag-btn tag-district" data-code="GEUMCHEON">금천구</button>
+            <button class="tag-btn tag-district" data-code="NOWON">노원구</button>
+            <button class="tag-btn tag-district" data-code="DOBONG">도봉구</button>
+            <button class="tag-btn tag-district" data-code="DONGDAEMUN">동대문구</button>
+            <button class="tag-btn tag-district" data-code="DONGJAK">동작구</button>
+            <button class="tag-btn tag-district" data-code="MAPO">마포구</button>
+            <button class="tag-btn tag-district" data-code="SEODAEMUN">서대문구</button>
+            <button class="tag-btn tag-district" data-code="SEOCHO">서초구</button>
+            <button class="tag-btn tag-district" data-code="SEONGDONG">성동구</button>
+            <button class="tag-btn tag-district" data-code="SEONGBUK">성북구</button>
+            <button class="tag-btn tag-district" data-code="SONGPA">송파구</button>
+            <button class="tag-btn tag-district" data-code="YANGCHEON">양천구</button>
+            <button class="tag-btn tag-district" data-code="YEONGDEUNGPO">영등포구</button>
+            <button class="tag-btn tag-district" data-code="YONGSAN">용산구</button>
+            <button class="tag-btn tag-district" data-code="EUNPYEONG">은평구</button>
+            <button class="tag-btn tag-district" data-code="JONGNO">종로구</button>
+            <button class="tag-btn tag-district" data-code="JUNG">중구</button>
+            <button class="tag-btn tag-district" data-code="JUNGRANG">중랑구</button>
+        </div>
+
+        <!-- 거리: 1개만 선택 (숫자로 저장) -->
+        <div class="tag-row">
+            <button class="tag-btn tag-distance" data-value="2">3km-</button>
+            <button class="tag-btn tag-distance" data-value="3">3km</button>
+            <button class="tag-btn tag-distance" data-value="5">5km</button>
+            <button class="tag-btn tag-distance" data-value="10">10km</button>
+            <button class="tag-btn tag-distance" data-value="15">10km+</button>
+        </div>
+
+        <!-- 경사: 1개만 선택 -->
+        <div class="tag-row">
+            <button class="tag-btn tag-slope" data-code="FLAT">평지 위주</button>
+            <button class="tag-btn tag-slope" data-code="HILLY">오르막 위주</button>
+        </div>
+
+        <!-- 풍경: 1개만 선택 -->
+        <div class="tag-row">
+            <button class="tag-btn tag-scenery" data-code="NATURE">자연 속</button>
+            <button class="tag-btn tag-scenery" data-code="CITY">도심 속</button>
+            <button class="tag-btn tag-scenery" data-code="MIXED">자연과 도심 속</button>
+        </div>
+
+
+
+        <!-- 🔹 코스 이름 -->
+<div class="name-wrap">
+  <img
+    src="./element/upload course/SVG/course_name.svg"
+    alt="course name img"
+    class="name-bg"
+  />
+  <input
+    id="titleInput"
+    type="text"
+    maxlength="15"
+    class="name-input"
+    placeholder="이름을 작성해주세요. (최대 15자)"
+  />
+</div>
+
+<!-- 🔹 코스 설명 -->
+<div class="desc-wrap-upload">
+  <img
+    src="./element/upload course/SVG/course_description.svg"
+    alt="course descript img"
+    class="desc-bg"
+  />
+  <textarea
+    id="descInput"
+    maxlength="250"
+    class="desc-input"
+    placeholder="코스에 대해 자유롭게 설명해주세요. (최대 250자)"
+  ></textarea>
+</div>
+      <a href="mypage.html" class="before-btn">
+                <img src="./element/upload course/SVG/beforebutton.svg" alt="beforeBtn svg">
+        </a>
+        <button id="uploadBtn" class="upload-btn">
+            <img src="./element/upload course/SVG/uploadbutton.svg" alt="upload-btn">
+        </button>
+    </div>
+    
+    <!-- 🔥 업로드 성공 모달 -->
+<div id="uploadSuccessModal" class="upload-success hidden">
+  <div class="upload-success-box">
+    <p class="upload-success-text">업로드가 완료되었습니다.</p>
+    <button id="goHomeBtn" class="go-home-btn">홈으로 가기</button>
+  </div>
+</div>
+
+
+    <!-- 네이버 지도 API (YOUR_CLIENT_ID 부분만 본인 걸로!) -->
+    <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=4sobw8kl0w"></script>
+
+     <!-- Firebase v8 SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <!-- 내가 만든 지도 로직 -->
+    <script src="./uploadCourseMap.js"></script>
+
+
+    
+</body>
+</html>

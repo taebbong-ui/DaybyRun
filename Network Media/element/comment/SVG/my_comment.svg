@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_2" data-name="레이어 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 36.81 36.31">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        fill: #f9dd8b;
+      }
+
+      .cls-3 {
+        fill: #705d3e;
+      }
+    </style>
+    <symbol id="_새_심볼" data-name="새 심볼" viewBox="0 0 36.81 36.31">
+      <g>
+        <ellipse class="cls-3" cx="18.41" cy="34.05" rx="8.47" ry="2.27"/>
+        <path class="cls-2" d="M36.79,11.86c-.36-5.06-5.18-7.93-7.42-9.26C24.69-.18,20.04-.09,18.1.06c0,.02,0,.05,0,.07-2.2-.1-6.42.06-10.66,2.58C5.2,4.04.38,6.9.02,11.96c-.38,5.41,4.63,9.06,5.3,9.54,4.09,2.89,8.54,2.35,9.61,2.19,1.16,3.7,2.32,7.4,3.48,11.11,0-.04,0-.08,0-.13,1.16-3.7,2.32-7.39,3.47-11.09,1.07.16,5.52.7,9.61-2.19.67-.47,5.68-4.13,5.3-9.54Z"/>
+        <circle class="cls-1" cx="18.41" cy="13.36" r="2.3"/>
+        <circle class="cls-1" cx="9.5" cy="13.36" r="2.3"/>
+        <circle class="cls-1" cx="27.32" cy="13.39" r="2.3"/>
+      </g>
+    </symbol>
+  </defs>
+  <g id="comment">
+    <use width="36.81" height="36.31" xlink:href="#_새_심볼"/>
+  </g>
+</svg>

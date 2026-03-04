@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_2" data-name="레이어 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 88.93 39.09">
+  <defs>
+    <style>
+      .cls-1 {
+        letter-spacing: 0em;
+      }
+
+      .cls-2 {
+        letter-spacing: 0em;
+      }
+
+      .cls-3 {
+        font-family: NewYork, NewYork;
+        font-size: 35px;
+      }
+    </style>
+  </defs>
+  <g id="music">
+    <text class="cls-3" transform="translate(0 29.75)"><tspan x="0" y="0">M</tspan><tspan class="cls-2" x="28.8" y="0">us</tspan><tspan class="cls-1" x="62.89" y="0">ic</tspan></text>
+  </g>
+</svg>

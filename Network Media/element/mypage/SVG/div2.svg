@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_2" data-name="레이어 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 309.71 125.2">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #ffffd4;
+      }
+
+      .cls-2 {
+        font-family: Pretendard-Regular-KSCpc-EUC-H, Pretendard;
+        font-size: 15px;
+        letter-spacing: -.03em;
+      }
+
+      .cls-3 {
+        stroke: #515151;
+        stroke-width: .5px;
+      }
+
+      .cls-3, .cls-4, .cls-5 {
+        fill: none;
+        stroke-linecap: round;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-4 {
+        stroke: #fff;
+      }
+
+      .cls-6 {
+        fill: #515151;
+        font-family: Pretendard-Light-KSCpc-EUC-H, Pretendard;
+        font-size: 13px;
+        font-weight: 300;
+        letter-spacing: -.03em;
+      }
+
+      .cls-5 {
+        stroke: #8e7c62;
+        stroke-width: 3px;
+      }
+
+      .cls-7 {
+        fill: #8e7c62;
+      }
+    </style>
+  </defs>
+  <g id="profile">
+    <g>
+      <rect class="cls-1" width="309.71" height="125.2" rx="20.75" ry="20.75"/>
+      <text class="cls-2" transform="translate(115.43 35.42)"><tspan x="0" y="0">나의 다이어리</tspan></text>
+      <text class="cls-6" transform="translate(30.08 99.87)"><tspan x="0" y="0">나의 코스</tspan></text>
+      <text class="cls-6" transform="translate(231.01 99.87)"><tspan x="0" y="0">나의 음악</tspan></text>
+      <text class="cls-6" transform="translate(126.18 99.87)"><tspan x="0" y="0">나의 코멘트</tspan></text>
+      <line class="cls-3" x1="208.08" y1="63.21" x2="208.08" y2="107.89"/>
+      <line class="cls-3" x1="98.08" y1="63.21" x2="98.08" y2="107.89"/>
+      <path id="distance" class="cls-5" d="M62.92,59.17c-4.23.05-8.45.11-12.68.16-.2.01-.48.05-.79.16-1.24.44-1.81,1.57-1.98,1.91-.16.32-.7,1.4-.4,2.7.47,2,2.52,2.74,2.68,2.8h.86c.26,0,8.84-.03,9.37,0,.14,0,.33.02.55.07.94.2,1.56.74,1.83.98.31.28,1.33,1.19,1.47,2.68.15,1.58-.75,3.24-2.17,3.87-.57.26-1.11.29-1.44.28h-21.37"/>
+      <path class="cls-7" d="M254.57,54.09c-7.12,0-12.89,5.77-12.89,12.89s5.77,12.89,12.89,12.89,12.89-5.77,12.89-12.89-5.77-12.89-12.89-12.89ZM254.57,70.52c-1.96,0-3.54-1.59-3.54-3.54s1.59-3.54,3.54-3.54,3.54,1.59,3.54,3.54-1.59,3.54-3.54,3.54Z"/>
+      <path class="cls-4" d="M256.95,61.15c.4.15,1.83.73,2.74,2.29,1.01,1.75.65,3.47.56,3.85"/>
+      <path class="cls-4" d="M256.95,61.15c.4.15,1.83.73,2.74,2.29,1.01,1.75.65,3.47.56,3.85"/>
+      <path class="cls-4" d="M256.34,58.56c.38.06,3.81.62,5.58,3.86,1.93,3.53.14,7.01,0,7.26"/>
+      <circle class="cls-7" cx="168.81" cy="70.29" r="3.24"/>
+      <circle class="cls-7" cx="152.81" cy="70.29" r="3.24"/>
+      <circle class="cls-7" cx="136.81" cy="70.29" r="3.24"/>
+    </g>
+  </g>
+</svg>

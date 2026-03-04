@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_2" data-name="레이어 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 393 92.68">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #b4b897;
+        stroke-miterlimit: 10;
+        stroke-width: .5px;
+      }
+
+      .cls-2 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <g id="main_main">
+    <g>
+      <rect id="main_main_belowWind" class="cls-2" x="0" y=".25" width="393" height="92.43"/>
+      <path class="cls-1" d="M0,.25h393"/>
+    </g>
+  </g>
+</svg>

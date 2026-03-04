@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_2" data-name="레이어 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 99.39 63.65">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #b4b897;
+        stroke-miterlimit: 10;
+        stroke-width: 4.5px;
+      }
+
+      .cls-2 {
+        fill: #705d3e;
+        font-family: Pretendard-Regular-KSCpc-EUC-H, Pretendard;
+        font-size: 11px;
+        letter-spacing: -.03em;
+      }
+
+      .cls-3 {
+        fill: #b4b897;
+      }
+    </style>
+  </defs>
+  <g id="course_detail">
+    <g id="music">
+      <text class="cls-2" transform="translate(0 60.41)"><tspan x="0" y="0">이 코스와 어울리는 음악</tspan></text>
+      <g>
+        <ellipse class="cls-3" cx="31.92" cy="25.85" rx="4.4" ry="10.34"/>
+        <ellipse class="cls-3" cx="64.17" cy="25.85" rx="4.4" ry="10.34"/>
+        <path class="cls-1" d="M32.28,23.34c-1.73-11.67,7.14-21.07,15.62-21.09,8.51-.02,17.44,9.38,15.71,21.09"/>
+        <ellipse class="cls-3" cx="67.63" cy="25.85" rx="2.67" ry="4.83"/>
+        <ellipse class="cls-3" cx="28.25" cy="25.84" rx="2.67" ry="4.83"/>
+      </g>
+    </g>
+  </g>
+</svg>

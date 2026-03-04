@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_2" data-name="레이어 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 153.47 43.68">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #e3e1d7;
+        font-family: TTHakgyoansimJeomsimsiganB, 'Hakgyoansim Jeomsimsigan';
+        font-size: 18px;
+      }
+
+      .cls-2 {
+        fill: #7d8972;
+      }
+    </style>
+  </defs>
+  <g id="course_upload" data-name="course upload">
+    <g id="uploadbutton">
+      <rect class="cls-2" width="153.47" height="43.68"/>
+      <text class="cls-1" transform="translate(36.32 26.88)"><tspan x="0" y="0">코스 업로드</tspan></text>
+    </g>
+  </g>
+</svg>

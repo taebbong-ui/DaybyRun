@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Page</title>
+    <style>
+/* Pretendard Regular (weight 400) */
+@font-face {
+    font-family: "PretendardCustom";
+    src: url("./fonts/Pretendard-Regular.otf") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+}
+/* Pretendard Medium */
+@font-face {
+    font-family: "PretendardCustom";
+    src: url("./fonts/Pretendard-Medium.otf") format("opentype");
+    font-weight: 500;
+    font-style: normal;
+}
+/* Pretendard Bold */
+@font-face {
+    font-family: "PretendardCustom";
+    src: url("./fonts/Pretendard-Bold.otf") format("opentype");
+    font-weight: 600;
+    font-style: normal;
+}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #ffffff;           /* 바깥 배경 (앱 밖 영역) */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 앱 프레임 (393 x 852 기준) */
+        .app {
+            width: 100%;
+            max-width: 393px;         
+            aspect-ratio: 393 / 852;    /* 비율 유지 */
+            background: #ffffff;
+            overflow: hidden;
+            position: relative;  
+        }
+
+        .ref {
+            position: absolute;
+            inset: 0;              /* top:0; right:0; bottom:0; left:0; */
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .music_page {
+            position: absolute;
+            top: 8.4%;
+            left: 50%;
+            width: 22.8%;
+            height: auto;
+            transform: translate(-50%, -50%);
+        }
+        .note {
+            position: absolute;
+            bottom: 1%;
+            left: 50%;
+            width: 100%;
+            height: auto;
+            transform: translate(-50%);
+            z-index: 999;
+        }
+        .cd {
+            position: absolute;
+            top: 8.25%;
+            left: 84.8%;
+            width: 11.5%;
+            height: auto;
+            transform: translate(-50%, -50%);
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+        }
+        .close-btn {
+            position: absolute;
+            top: 6.5%;      /* 필요하면 숫자 조금씩 조절 */
+            left: 12%;
+
+            background: none;
+            border: none;
+            padding: 0;
+
+            font-size: 24px;      /* X 크기 */
+            font-weight: 200;     /* 얇은 X 원하면 200~300, 진하게는 600 */
+            color: #000;          /* 색 */
+
+            cursor: pointer;
+        }
+
+
+
+/* ===== 리스트 전체 영역 ===== */
+.music-list {
+  position: absolute;          /* 너 앱 구조에 맞게 조정 가능 */
+  top: 13%;                  /* "Music" 타이틀 아래 정도 */
+  left: 0;
+  right: 0;
+  bottom: 10%;
+  padding: 16px 0 24px;
+  overflow: hidden;
+}
+
+/* 스크롤 영역 */
+.music-track-list {
+  height: 100%;
+  overflow-y: auto;
+  padding: 0 20px;
+  /* scroll-snap-type: y mandatory;        */
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.music-track-list {
+  -ms-overflow-style: none;  /* IE, Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+.music-track-list::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari */
+}
+
+.music-item {
+  /* scroll-snap-align: center; */
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.96);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+
+  /* 카드 길이/위치는 취향대로 유지 */
+  width: 85%;
+  margin: 0 auto 16px auto;   /* ⭐ 중앙정렬 핵심 */
+
+  opacity: 0.4;
+  transform: scale(0.9);     /* ✨ 회전/translate 전부 제거 */
+  transform-origin: 50% 50%; /* 가운데 기준으로 살짝만 커졌다 작아졌다 */
+
+  transition: transform 0.18s ease-out, opacity 0.18s ease-out;
+}
+
+.music-item.active {
+  box-shadow: 0 10px 30px rgba(0,0,0,0.14);
+}
+
+/* 동그란 앨범 이미지 래퍼 */
+.music-album {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.music-album img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 텍스트 영역 */
+.music-meta {
+  font-family: "PretendardCustom";
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.music-title-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+}
+
+.music-artist-text {
+  font-size: 12px;
+  color: #777;
+}
+
+/* Play 버튼 */
+.music-play-btn {
+  padding: 6px 14px;
+  font-size: 11px;
+  border-radius: 999px;
+  border: none;
+  background: #f1f1f1;
+  color: #333;
+  cursor: pointer;
+}
+
+
+/* ================= 모달 =================== */
+/* 모달 외곽은 그대로 */
+.music-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.35);
+  z-index: 1000;
+  
+}
+.music-modal.show { display: flex; }
+
+.music-modal-inner {
+  width: 73%;
+  height: 57%;
+  background: #e8e7e2;
+  border-radius: 24px;
+  position: relative;
+}
+
+/* 상단 X + */
+.music-close {
+  position: absolute;
+  top: 3%;
+  left: 8%;
+  border: none;
+  color: #51514f;
+  background: transparent;
+  font-size: 25px;
+}
+
+/* 4개 SVG 묶는 컨테이너 */
+.music-form {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* 각 SVG 필드 공통 */
+.music-field {
+  position: relative;
+  border: none;
+  padding: 0;
+  align-items: center;
+  background: none;
+  display: flex;              
+}
+
+.photo-field {
+  position: absolute;
+  background: #ffffff;
+  width: 73%;
+  aspect-ratio: 1;    /* 비율 유지 */
+  left: 50%;
+  top: 8%;
+  transform: translate(-50%); 
+  border-radius: 25px;
+  display: flex;
+  justify-content: center; /* 가로 중앙 */
+  align-items: center;     /* 세로 중앙 */
+  overflow: hidden;
+}
+.photo-icon {
+  width: 55%;
+  height: auto;
+}
+
+/* 업로드한 이미지 미리보기 */
+.photo-preview {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;              /* div에 꽉 차게! 핵심 */
+  display: none;                  /* 업로드 전에는 숨김 */
+}
+
+/* file input은 숨기기 */
+.photo-field input[type="file"] {
+  font-weight: 400;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.title-field,
+.singer-field {
+  position: absolute;
+  width: 87%;
+  aspect-ratio: 240.381 / 56.883;
+  left: 50%;
+  transform: translate(-50%);            
+}
+.title-field {top: 56%;}
+.singer-field {top: 70.5%;}
+
+.title-field img,
+.singer-field img {
+  width: 100%;
+  height: auto;
+}
+
+/* 텍스트/파일 input은 SVG 위에 투명하게 올리기 */
+.music-field input[type="text"],
+.music-field input[type="file"] {
+  position: absolute;
+  left: 50%;
+  top: 70%;
+  transform: translate(-50%, -50%);
+  width: 85%;             /* 필요하면 조정 */
+  height: 40%;            /* 필요하면 조정 */
+  border: none;
+  background: transparent;
+  font-family: "PretendardCustom";  
+  font-size: 13px;
+  text-align: left;
+  color: #444;
+}
+
+/* file input 버튼 안 보이게 (클릭만 되게) */
+.photo-field input[type="file"] {
+  opacity: 0;
+}
+
+/* 업로드 버튼은 그냥 버튼 전체가 클릭 영역 */
+.upload-field {
+  position: absolute;
+  width: 35%;
+  height: auto;
+  left: 50%;
+  bottom: 6%;
+  transform: translate(-50%);
+}
+
+/* 스크린 리더용 숨김 텍스트 */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
+
+    </style>
+</head>
+<body>
+    <!-- <img src="./element/music/network-media.png" alt="reference img" class="ref" /> -->
+    <img src="./element/music/SVG/music.svg" alt="music_page" class="music_page" />
+    <img src="./element/music/SVG/음표.svg" alt="note" class="note" />
+
+    <img src="./element/music/SVG/CD.svg" alt="cd" class="cd" />
+    <button id="closeBtn" class="close-btn">X</button>
+
+    <!-- 저장된 음악 리스트 -->
+<section class="music-list">
+  <div class="music-track-list" id="musicTrackList"></div>
+</section>
+
+    <!-- 모달 -->
+<div class="music-modal" id="musicModal">
+  <div class="music-modal-inner">
+    <button class="music-close">&times;</button>
+
+    <div class="music-form">
+
+      <!-- 1. 사진 업로드 SVG + file input -->
+      <label class="music-field photo-field">
+        <img src="./element/music/SVG/photo.svg" alt="사진 업로드" class="photo-icon"/>
+        <img class="photo-preview" id="photoPreview" />
+        <input type="file" id="musicPhoto" accept="image/*" />
+      </label>
+
+      <!-- 2. 노래 제목 SVG + text input -->
+      <label class="music-field title-field">
+        <img src="./element/music/SVG/title.svg" alt="노래 제목" />
+        <input type="text" id="songTitle" placeholder="" />
+      </label>
+
+      <!-- 3. 가수 SVG + text input -->
+      <label class="music-field singer-field">
+        <img src="./element/music/SVG/singer.svg" alt="가수" />
+        <input type="text" id="songSinger" placeholder="" />
+      </label>
+
+      <!-- 4. 업로드 버튼 SVG + 실제 버튼 -->
+      <button class="music-field upload-field" id="uploadSongBtn">
+        <img src="./element/music/SVG/upload button.svg" alt="노래 업로드" />
+      </button>
+
+    </div>
+  </div>
+</div>
+</body>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+
+<script>
+  // 1) Firebase 초기화 (detail.js랑 맞춰줌)
+  const firebaseConfig = {
+    apiKey: "AIzaSyAE8PH0DT_49EGAco6UozQ9WlnEZMxXy_M",
+    authDomain: "day-by-run.firebaseapp.com",
+    projectId: "day-by-run",
+    storageBucket: "day-by-run.firebasestorage.app",
+  };
+
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  const db = firebase.firestore();
+  const storage = firebase.storage();
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const cd       = document.querySelector('.cd');
+    const modal    = document.getElementById('musicModal');
+    const closeBtn = document.querySelector('.music-close');
+
+    const fileInput   = document.getElementById("musicPhoto");
+    const titleInput  = document.getElementById("songTitle");
+    const singerInput = document.getElementById("songSinger");
+    const previewImg  = document.getElementById("photoPreview");
+    const iconImg     = document.querySelector(".photo-icon");
+    const uploadBtn   = document.getElementById("uploadSongBtn");
+    const listEl = document.getElementById("musicTrackList");
+
+
+
+    // URL에서 코스 id 가져오기: music.html?id=코스문서ID
+    const params   = new URLSearchParams(location.search);
+    const courseId = params.get("id");
+    console.log("music.html courseId:", courseId);
+
+    // ===== 모달 열고 닫기 =====
+    cd.addEventListener('click', () => {
+      modal.classList.add('show');
+    });
+
+    closeBtn.addEventListener('click', () => {
+      modal.classList.remove('show');
+    });
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.remove('show');
+      }
+    });
+
+    // ===== 사진 선택 시 미리보기 =====
+    fileInput.addEventListener("change", function() {
+      const file = this.files[0];
+      if (!file) return;
+
+      previewImg.src = URL.createObjectURL(file);
+      previewImg.style.display = "block";
+      if (iconImg) iconImg.style.display = "none";
+    });
+
+    // ===== 업로드 버튼 클릭 → Storage + Firestore =====
+    uploadBtn.addEventListener("click", async () => {
+      const file   = fileInput.files[0];
+      const title  = titleInput.value.trim();
+      const singer = singerInput.value.trim();
+
+      if (!courseId) {
+        alert("코스 정보가 없습니다. 다시 코스를 선택해 주세요.");
+        return;
+      }
+      if (!file) {
+        alert("사진을 업로드해 주세요.");
+        return;
+      }
+      if (!title || !singer) {
+        alert("노래 제목과 가수를 모두 입력해 주세요.");
+        return;
+      }
+
+      try {
+        uploadBtn.disabled = true;
+        console.log("업로드 시작");
+
+        // 1) Storage에 이미지 업로드
+        const path    = `courseMusic/${courseId}/${Date.now()}_${file.name}`;
+        const fileRef = storage.ref().child(path);
+
+        await fileRef.put(file);
+        const imageUrl = await fileRef.getDownloadURL();
+        console.log("imageUrl:", imageUrl);
+
+        // 2) Firestore에 메타데이터 저장
+        await db
+          .collection("runCourses")
+          .doc(courseId)
+          .collection("musics")
+          .add({
+            title: title,
+            singer: singer,
+            imageUrl: imageUrl,
+            courseId: courseId,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        
+        // alert("노래가 저장되었습니다!");
+        // 입력값/파일 초기화
+        fileInput.value  = "";
+        titleInput.value = "";
+        singerInput.value = "";
+
+        // 이미지 프리뷰 초기화
+        if (previewImg) {
+            previewImg.src = "";
+            previewImg.style.display = "none";
+        }
+        if (iconImg) {
+        iconImg.style.display = "block"; // 카메라 아이콘 다시 보이게
+        }
+
+        // 모달 닫기
+        modal.classList.remove("show");
+
+     } catch (err) {
+        console.error("업로드 실패:", err);
+        alert("업로드 중 오류가 발생했습니다: " + err.message);
+    } finally {
+        uploadBtn.disabled = false;
+    }
+  })
+          // ===== 코스별 음악 리스트 불러오기 =====
+    // ===== 무한 스크롤용 전역 설정 =====
+  const LOOP_COUNT = 3;        // 리스트를 화면에 몇 세트 반복해서 붙일지
+  let singleLoopHeight = 0;    // 한 세트(원본 리스트) 높이
+
+  // 카드 하나 만드는 함수
+  function createMusicItem(data) {
+    const item = document.createElement("div");
+    item.className = "music-item";
+
+    item.innerHTML = `
+      <div class="music-album">
+        <img src="${data.imageUrl}" alt="${data.title || "album"}" />
+      </div>
+      <div class="music-meta">
+        <p class="music-title-text">${data.title || ""}</p>
+        <p class="music-artist-text">${data.singer || ""}</p>
+      </div>
+      <button class="music-play-btn">Play</button>
+    `;
+
+    return item;
+  }
+  
+
+  // songs 배열을 LOOP_COUNT번 반복해서 붙이는 함수
+  function renderInfiniteList(songs) {
+    listEl.innerHTML = "";
+    
+
+    // 화면에 songs 목록을 LOOP_COUNT 세트만큼 복제해서 붙이기
+    for (let loop = 0; loop < LOOP_COUNT; loop++) {
+      songs.forEach((song) => {
+        const item = createMusicItem(song);
+        listEl.appendChild(item);
+      });
+    }
+
+    // 한 세트 높이 계산 + 가운데 세트로 위치 맞추기
+    requestAnimationFrame(() => {
+      const fullHeight = listEl.scrollHeight;
+      singleLoopHeight = fullHeight / LOOP_COUNT;
+
+      // 두 번째 세트(가운데)에서 시작하면 위/아래 양쪽으로 자연스럽게 무한처럼 보임
+      listEl.scrollTop = singleLoopHeight;
+      updateActiveItem();   // 가운데 강조/그라데이션 한 번 계산
+    });
+  }
+
+  // 스크롤이 위/아래 끝에 닿으면 위치를 되감아서 무한처럼 보이게
+  function handleInfiniteLoopScroll() {
+    if (!singleLoopHeight) return;
+
+    const top = listEl.scrollTop;
+
+    // 너무 위쪽(첫 세트 위로)으로 가면 한 세트 아래로 점프
+    if (top <= 0) {
+      listEl.scrollTop = top + singleLoopHeight;
+    }
+    // 너무 아래쪽(마지막 세트 아래로)로 가면 한 세트 위로 점프
+    else if (top >= singleLoopHeight * (LOOP_COUNT - 1)) {
+      listEl.scrollTop = top - singleLoopHeight;
+    }
+  }
+
+  // ===== 코스별 음악 리스트 불러오기 (무한 스크롤 버전) =====
+  if (courseId && listEl) {
+    db.collection("runCourses")
+      .doc(courseId)
+      .collection("musics")
+      .orderBy("createdAt", "desc")
+      .onSnapshot((snapshot) => {
+        const songs = [];
+        snapshot.forEach((doc) => {
+          songs.push(doc.data());
+        });
+
+        if (songs.length === 0) {
+  listEl.innerHTML = `
+    <p style="
+      text-align:center;
+      font-size: 13px;
+      color: #888;
+      margin-top: 40px;
+    ">
+      아직 등록된 음악이 없습니다.
+    </p>
+  `;
+  singleLoopHeight = 0;   // 무한 스크롤용 높이 초기화 (안 해도 큰 문제는 없지만 깔끔하게)
+  return;
+}
+
+renderInfiniteList(songs);
+      });
+
+    // 스크롤할 때마다: 1) 무한 루프 처리  2) 가운데 강조 업데이트
+    listEl.addEventListener("scroll", () => {
+      handleInfiniteLoopScroll();
+      window.requestAnimationFrame(updateActiveItem);
+    });
+  }
+
+
+
+  // ===== 가운데에 가장 가까운 아이템에 .active 붙여주는 함수 =====
+  function updateActiveItem() {
+  if (!listEl) return;
+
+  const items = Array.from(listEl.querySelectorAll(".music-item"));
+  if (!items.length) return;
+
+  // 리스트 자체의 세로 중앙
+  const listRect = listEl.getBoundingClientRect();
+  const centerY  = listRect.top + listRect.height / 2;
+
+  const MAX_SCALE_DROP = 0.18;  // 중앙에서 멀어질수록 얼마나 작아질지
+  const MAX_FADE       = 0.55;  // 얼마나 투명해질지
+
+  let closestItem = null;
+  let closestDist = Infinity;
+
+  items.forEach((item) => {
+    const rect = item.getBoundingClientRect();
+    const itemCenter = rect.top + rect.height / 2;
+    const dy = itemCenter - centerY;
+
+    // 중앙 기준 -1 ~ 1로 정규화 (위/아래 0.5 화면 정도만 적극 반응)
+    const RANGE = listRect.height * 0.5 || 1;
+    const tRaw  = dy / RANGE;
+    const t     = Math.max(-1, Math.min(1, tRaw));
+
+    const distNorm = Math.abs(t);                 // 0(중앙) ~ 1(끝)
+    const scale   = 1 - distNorm * MAX_SCALE_DROP;
+    const opacity = 1 - distNorm * MAX_FADE;
+
+    // 🔥 직선: 스케일/그라데이션만
+    item.style.transform = `scale(${scale})`;
+    item.style.opacity   = opacity;
+
+    const distAbs = Math.abs(dy);
+    if (distAbs < closestDist) {
+      closestDist = distAbs;
+      closestItem = item;
+    }
+  });
+
+  // 가운데 카드만 active 효과
+  items.forEach((item) => item.classList.remove("active"));
+  if (closestItem) closestItem.classList.add("active");
+}
+
+});
+// == X 버튼 클릭 시 코스 상세 페이지로 돌아가기 ==
+document.getElementById("closeBtn").addEventListener("click", () => {
+  const params   = new URLSearchParams(window.location.search);
+  const courseId = params.get("id");
+  const from     = params.get("from") || "";
+  const keyword  = params.get("keyword") || "";
+
+  if (!courseId) {
+    window.location.href = "main home.html";
+    return;
+  }
+
+  const qs = new URLSearchParams();
+  qs.set("id", courseId);
+  if (from)    qs.set("from", from);
+  if (keyword) qs.set("keyword", keyword);
+
+  window.location.href = `detail.html?${qs.toString()}`;
+});
+
+
+
+</script>
+
+</html>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_2" data-name="레이어 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 155.92 39.09">
+  <defs>
+    <style>
+      .cls-1 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-2 {
+        letter-spacing: 0em;
+      }
+
+      .cls-3 {
+        letter-spacing: 0em;
+      }
+
+      .cls-4 {
+        font-family: NewYork, NewYork;
+        font-size: 35px;
+      }
+    </style>
+  </defs>
+  <g id="comment">
+    <text class="cls-4" transform="translate(0 29.75)"><tspan class="cls-3" x="0" y="0">C</tspan><tspan x="26.08" y="0">om</tspan><tspan class="cls-3" x="75.42" y="0">m</tspan><tspan x="103.74" y="0">e</tspan><tspan class="cls-1" x="123.27" y="0">n</tspan><tspan class="cls-2" x="141.96" y="0">t</tspan></text>
+  </g>
+</svg>
