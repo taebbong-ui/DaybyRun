@@ -1,11 +1,5 @@
 # Day by Run
 
-### 프로젝트 소개
-
-
-### 주요 기능
-
-
 ### 배포 링크
 https://taebbong-ui.github.io/DaybyRun/ 
 
